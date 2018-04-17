@@ -4,39 +4,30 @@ public class Product {
 
 	private int id;
 	private String name;
-	private int quantity;
+	private String description;
+	private String category;
+	private String subcategory;
 	private double price;
+	private int ammountInStock;
+	private int categoryId;
 	
-	public Product(int id, String name, int quantity, double price) {
-		this.id = id;
+	//constructors
+	
+	public Product(String name, String description, String category, String subcategory, double price, int ammountInStock, int categoryId) {
 		this.name = name;
-		this.quantity = quantity;
+		this.description = description;
+		this.category = category;
+		this.subcategory = subcategory;
 		this.price = price;
+		this.ammountInStock = ammountInStock;
+		this.categoryId = categoryId;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public int getQuantity() {
-		return quantity;
-	}
-
-	public double getPrice() {
-		return price;
-	}
-
-	public void decreaseQuantity() {
-		synchronized (this) {
-			quantity--;
-		}
+	public Product(int id, String name, String description, String category, String subcategory, double price, int ammountInStock, int categoryId) {
+		this(name, description, category, subcategory, price, ammountInStock, categoryId);
+		this.id = id;
 	}
 	
-	
-	
+	//getters and setters
 	
 }
