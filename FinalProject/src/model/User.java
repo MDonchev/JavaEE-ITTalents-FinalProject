@@ -2,10 +2,13 @@ package model;
 
 import java.util.List;
 
+import util.BCrypt;
+
 public class User {
 
 	private int id;
 	private String username;
+	private String password;
 	private String email;
 	private String address;
 	private String phoneNumber;
@@ -13,10 +16,9 @@ public class User {
 	private boolean isAdmin;
 	
 	private List<Product> favoriteProducts;
-	private List<Product> shoppingCart;
 	
 	//constructors
-	public User(String username, String email, String address, String phoneNumber, String sex, boolean isAdmin, List<Product> favoriteProducts, List<Product> shoppingCart) {
+	public User(String username, String email, String address, String phoneNumber, String sex, boolean isAdmin, List<Product> favoriteProducts) {
 		this.username = username;
 		this.email = email;
 		this.address = address;
@@ -24,11 +26,10 @@ public class User {
 		this.sex = sex;
 		this.isAdmin = isAdmin;
 		this.favoriteProducts = favoriteProducts;
-		this.shoppingCart = shoppingCart;
 	}
 	
 	public User(int id, String username, String email, String address, String phoneNumber, String sex, boolean isAdmin, List<Product> favoriteProducts, List<Product> shoppingCart) {
-		this(username, email, address, phoneNumber, sex, isAdmin, favoriteProducts, shoppingCart);
+		this(username, email, address, phoneNumber, sex, isAdmin, favoriteProducts);
 		this.id = id;
 	}
 
@@ -97,14 +98,15 @@ public class User {
 	public void setFavoriteProducts(List<Product> favoriteProducts) {
 		this.favoriteProducts = favoriteProducts;
 	}
-
-	public List<Product> getShoppingCart() {
-		return shoppingCart;
+	
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public void setShoppingCart(List<Product> shoppingCart) {
-		this.shoppingCart = shoppingCart;
+	public String hashPassword() {
+		return BCrypt.hashpw(this.password, BCrypt.gensalt());
 	}
-	
-	
 }
