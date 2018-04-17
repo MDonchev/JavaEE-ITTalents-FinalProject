@@ -1,38 +1,50 @@
 package model;
 
-import java.util.List;
-
 public class User {
 
-	private int id;
+	private long id;
 	private String username;
+	private String password;
 	private String email;
-	private String address;
-	private String phoneNumber;
-	private String sex;
-	private boolean isAdmin;
+	private int genderId;
 	
-	private List<Product> favoriteProducts;
-	private List<Product> shoppingCart;
-	
-	//constructors
-	public User(String username, String email, String address, String phoneNumber, String sex, boolean isAdmin, List<Product> favoriteProducts, List<Product> shoppingCart) {
+	public User(String username, String password, String email, int genderId) {
 		this.username = username;
+		this.password = password;
 		this.email = email;
-		this.address = address;
-		this.phoneNumber = phoneNumber;
-		this.sex = sex;
-		this.isAdmin = isAdmin;
-		this.favoriteProducts = favoriteProducts;
-		this.shoppingCart = shoppingCart;
+		this.genderId = genderId;
 	}
-	
-	public User(int id, String username, String email, String address, String phoneNumber, String sex, boolean isAdmin, List<Product> favoriteProducts, List<Product> shoppingCart) {
-		this(username, email, address, phoneNumber, sex, isAdmin, favoriteProducts, shoppingCart);
+
+	public User(long id, String username, String password, String email, int genderId) {
+		this(username, password, email, genderId);
 		this.id = id;
 	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public int getGenderId() {
+		return genderId;
+	}
 	
-	//getters and setters
+	
 	
 	
 }
