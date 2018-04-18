@@ -45,7 +45,7 @@ public class RegisterServlet extends HttpServlet {
 			//getServletConfig().getServletContext().setAttribute("products", ProductDao.getInstance().getAll());
 			
 			//forward to login OR main
-			request.getRequestDispatcher("index.html").forward(request, response);
+			request.getRequestDispatcher("index.jsp").forward(request, response);
 		}
 		catch (UserDataException e) {
 			request.setAttribute("exception", e);
@@ -64,9 +64,9 @@ public class RegisterServlet extends HttpServlet {
 			//add them to request
 			request.setAttribute("genders", genders);
 			//forward this request to register.jsp
-			request.getRequestDispatcher("register.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
 		} catch (SQLException e) {
-			request.getRequestDispatcher("error.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/error.jsp").forward(request, response);
 		}
 		
 	}
