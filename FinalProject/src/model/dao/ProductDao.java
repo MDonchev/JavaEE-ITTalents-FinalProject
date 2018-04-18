@@ -27,7 +27,7 @@ public class ProductDao {
 		}
 		return instance;
 	}
-
+/*
 	public List<Product> getAll() throws SQLException {
 		String sql = "SELECT id, name, quantity, price FROM products;";
 		Statement s = con.createStatement();
@@ -49,5 +49,5 @@ public class ProductDao {
 		ps.setInt(1, productId);
 		ps.executeUpdate();
 	}
-
+*/
 }
