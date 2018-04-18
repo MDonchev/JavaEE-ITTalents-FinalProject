@@ -21,7 +21,7 @@ public final class UserCredentialsValidation {
 		//at least 1 special symbol in @,#,$,%,^,&,+,=,-
 		//no whitespaces
 		//at least 7 symbols lenght
-		return stringValidation(password) && password.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=-])(?=\\S+$).{7,}$");
+		return stringValidation(password) && password.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=-_])(?=\\S+$).{7,}$");
 	}
 	
 	public static final boolean numberValidation(String number) {

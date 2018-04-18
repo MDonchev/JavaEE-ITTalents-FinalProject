@@ -12,9 +12,10 @@ import controller.manager.DBManager;
 import model.Gender;
 import model.User;
 import util.BCrypt;
+import util.exceptions.UserDataException;
 
 
-public class UserDao {
+public class UserDao implements IUserDao{
 
 	private static UserDao instance;
 	private static Connection con;
@@ -32,34 +33,43 @@ public class UserDao {
 
 	public void saveUser(User u) throws SQLException {
 		String sql = "INSERT INTO users (username,password,email,address,phone_number,is_admin,gender_id) VALUES (?,?,?,?,?,?,?);";
-		PreparedStatement ps = con.prepareStatement(sql);
 		
-		String hashedPass = u.hashPassword();
-		
-		ps.setString(1, u.getUsername());
-		ps.setString(2, hashedPass);
-		ps.setString(3, u.getEmail());
-		ps.setString(4, u.getAddress());
-		ps.setString(5, u.getPhoneNumber());
-		ps.setBoolean(6, u.isAdmin());
-		ps.setInt(7, u.getGender());
-		
-		ps.executeUpdate();
+		try(PreparedStatement ps = con.prepareStatement(sql);){
+			
+			String hashedPass = u.hashPassword();
+			
+			ps.setString(1, u.getUsername());
+			ps.setString(2, hashedPass);
+			ps.setString(3, u.getEmail());
+			ps.setString(4, u.getAddress());
+			ps.setString(5, u.getPhoneNumber());
+			ps.setBoolean(6, u.isAdmin());
+			ps.setInt(7, u.getGender());
+			
+			ps.executeUpdate();
+		}
 	}
 	
-	
-	public User getUser(String username, String pass) throws SQLException {
-		String sql = "SELECT id, username, password, email, address, phone_number, is_admin, gender_id FROM users WHERE username = ? AND password = ?";
+	// TODO : make it better
+	public User getUserFromLogin(String username, String pass) throws SQLException, UserDataException {
+		String sql = "SELECT id, username, password, email, address, phone_number, is_admin, gender_id FROM users WHERE username = ?";
+		
 		PreparedStatement ps = con.prepareStatement(sql);
 		ps.setString(1, username);
-		ps.setString(2, pass);
 		ResultSet result = ps.executeQuery();
 		
+		// TODO
 		List<Integer> favourites = new ArrayList<>();
+
 		
-		
-		if(result.next()) {
-			return new User(result.getInt("id"),
+		if(result.next() && BCrypt.checkpw(pass, result.getString("password"))) {
+			return new User(result.getString("username"),
+							result.getString("password"),
+							result.getString("email"),
+							result.getString("address"),
+							result.getString("phone_number"),
+							result.getInt("gender_id"),
+							result.getBoolean("is_admin")
 							);
 		}
 		else {
