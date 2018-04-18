@@ -48,6 +48,28 @@ public class UserDao {
 	}
 	
 	
+	public User getUser(String username, String pass) throws SQLException {
+		String sql = "SELECT id, username, password, email, address, phone_number, is_admin, gender_id FROM users WHERE username = ? AND password = ?";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setString(1, username);
+		ps.setString(2, pass);
+		ResultSet result = ps.executeQuery();
+		
+		List<Integer> favourites = new ArrayList<>();
+		
+		
+		if(result.next()) {
+			return new User(result.getInt("id"),
+							);
+		}
+		else {
+			return null;
+		}
+	}
+	
+	
+	
+
 	public List<Gender> getAllGenders() throws SQLException {
 		String sql = "SELECT id, type FROM genders;";
 		Statement s = con.createStatement();
@@ -58,19 +80,5 @@ public class UserDao {
 		}
 		return genders;
 	}
-/*
-	public User getUser(String username, String pass) throws SQLException {
-		String sql = "SELECT id, username, password, email, gender_id FROM users WHERE username = ? AND password = ?";
-		PreparedStatement ps = con.prepareStatement(sql);
-		ps.setString(1, username);
-		ps.setString(2, pass);
-		ResultSet result = ps.executeQuery();
-		if(result.next()) {
-			return new User();
-		}
-		else {
-			return null;
-		}
-	}
-	*/
+
 }
