@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import controller.manager.DBManager;
+import model.Gender;
 import model.User;
 import util.BCrypt;
 
@@ -22,7 +23,7 @@ public class UserDao {
 		con = DBManager.getInstance().getConnection();
 	}
 	
-	public static UserDao getInstance() {
+	public synchronized static UserDao getInstance() {
 		if(instance == null) {
 			instance = new UserDao();
 		}
@@ -30,7 +31,7 @@ public class UserDao {
 	}
 
 	public void saveUser(User u) throws SQLException {
-		String sql = "INSERT INTO users (username,password,email,address,phone_number,is_admin,sex) VALUES (?,?,?,?,?,?,?);";
+		String sql = "INSERT INTO users (username,password,email,address,phone_number,is_admin,gender_id) VALUES (?,?,?,?,?,?,?);";
 		PreparedStatement ps = con.prepareStatement(sql);
 		
 		String hashedPass = u.hashPassword();
@@ -41,9 +42,21 @@ public class UserDao {
 		ps.setString(4, u.getAddress());
 		ps.setString(5, u.getPhoneNumber());
 		ps.setBoolean(6, u.isAdmin());
-		ps.setString(7, u.getEmail());
+		ps.setInt(7, u.getGender());
 		
 		ps.executeUpdate();
+	}
+	
+	
+	public List<Gender> getAllGenders() throws SQLException {
+		String sql = "SELECT id, type FROM genders;";
+		Statement s = con.createStatement();
+		ResultSet result = s.executeQuery(sql);
+		List<Gender> genders = new ArrayList<>();
+		while(result.next()) {
+			genders.add(new Gender(result.getInt("id"), result.getString("type")));
+		}
+		return genders;
 	}
 /*
 	public User getUser(String username, String pass) throws SQLException {
