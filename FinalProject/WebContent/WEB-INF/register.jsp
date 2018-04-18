@@ -78,7 +78,7 @@
 				</table>
 				
 				<input type="submit" value="Register"><br>
-				Already have an account? <a href="index.jsp">Login here</a>
+				Already have an account? <a href="WEB-INF/login.jsp">Login here</a>
 			</form>
 	</body>
 </html>
