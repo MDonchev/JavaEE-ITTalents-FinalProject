@@ -7,9 +7,9 @@
 	<title>Insert title here</title>
 	</head>
 	<body>
-		<h1>Error.. Please dont report me!</h1>
+		<h1>Error!</h1>
 		<% Exception e = (Exception) request.getAttribute("exception"); %>
 		<h2>Reason: <%= e.getMessage() %></h2>
-		<a href="index.html">Back to login, sorry about that</a>
+		<a href="index.jsp">Back to login, sorry about that</a>
 	</body>
 </html>

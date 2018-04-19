@@ -31,7 +31,7 @@ public class UserDao implements IUserDao{
 		return instance;
 	}
 
-	public void saveUser(User u) throws SQLException {
+	public synchronized void saveUser(User u) throws SQLException {
 		String sql = "INSERT INTO users (username,password,email,address,phone_number,is_admin,gender_id) VALUES (?,?,?,?,?,?,?);";
 		
 		try(PreparedStatement ps = con.prepareStatement(sql);){
