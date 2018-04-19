@@ -36,7 +36,6 @@ public class LoginServlet extends HttpServlet {
 			}
 		}
 		catch (UserDataException e) {
-			System.out.println("userdata");
 			request.setAttribute("exception", e);
 			request.getRequestDispatcher("WEB-INF/error.jsp").forward(request, response);
 		}

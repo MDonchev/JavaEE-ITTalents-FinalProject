@@ -38,7 +38,7 @@ public class RegisterServlet extends HttpServlet {
 			
 			//create user
 			User u = new User(username, password1, email, address, phoneNumber, gender, false);
-			//add to db
+			//save user in data base and current session
 			UserDao.getInstance().saveUser(u);
 			request.getSession().setAttribute("user", u);
 			//TODO
