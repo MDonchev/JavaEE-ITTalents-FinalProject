@@ -1,32 +1,33 @@
 package model;
 
-public class Product {
+public abstract class Product {
 
 	private int id;
 	private String name;
 	private String description;
-	private String category;
-	private String subcategory;
 	private double price;
 	private int ammountInStock;
 	private int categoryId;
+	private int subcategoryId;
 	
 	//constructors
+	public Product(int id, String name, String description, double price, int ammountInStock, int categoryId,
+			int subcategoryId) {
+		this(name, description, price, ammountInStock, categoryId, subcategoryId);
+		this.id = id;
+	}
 	
-	public Product(String name, String description, String category, String subcategory, double price, int ammountInStock, int categoryId) {
+
+	public Product(String name, String description, double price, int ammountInStock, int categoryId,
+			int subcategoryId) {
 		this.name = name;
 		this.description = description;
-		this.category = category;
-		this.subcategory = subcategory;
 		this.price = price;
 		this.ammountInStock = ammountInStock;
 		this.categoryId = categoryId;
+		this.subcategoryId = subcategoryId;
 	}
 
-	public Product(int id, String name, String description, String category, String subcategory, double price, int ammountInStock, int categoryId) {
-		this(name, description, category, subcategory, price, ammountInStock, categoryId);
-		this.id = id;
-	}
 
 	//getters and setters
 	
@@ -52,22 +53,6 @@ public class Product {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	public String getSubcategory() {
-		return subcategory;
-	}
-
-	public void setSubcategory(String subcategory) {
-		this.subcategory = subcategory;
 	}
 
 	public double getPrice() {
