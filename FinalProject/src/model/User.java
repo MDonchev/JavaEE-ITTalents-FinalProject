@@ -61,6 +61,10 @@ public class User {
 		return isAdmin;
 	}
 	
+	public int getId() {
+		return id;
+	}
+	
 	public Collection<Integer> getFavorites(){
 		return Collections.unmodifiableList(this.favoriteProducts);
 	}
