@@ -10,7 +10,6 @@
 <body>
 	
 	<center>
-		asdasdasdasdasa
 		<h1>Welcome to Nargilemag.bg</h1>
 		<% User user = (User) session.getAttribute("user");
 			if (user != null) { %>

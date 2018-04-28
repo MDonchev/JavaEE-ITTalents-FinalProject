@@ -70,7 +70,7 @@ public enum ProductDao {
 		return products;
 	}
 	
-public List<Product> getAllProducts() throws SQLException {
+	public List<Product> getAllProducts() throws SQLException {
 		
 		String sql = "SELECT id, name, description, price, ammount_in_stock, category_id FROM products";
 		
@@ -95,25 +95,19 @@ public List<Product> getAllProducts() throws SQLException {
 		return products;
 	}
 	
-	/*
-	public synchronized void saveProduct(Product prod) throws SQLException {
+	// HOW TO DO IT
+	public void saveProduct(Product prod) throws SQLException {
 		String sql = "INSERT INTO products () VALUES ();";
 		
 		try(PreparedStatement ps = connection.prepareStatement(sql);){
 			
-			String hashedPass = u.hashPassword();
-			
-			ps.setString(1, u.getUsername());
-			ps.setString(2, hashedPass);
-			ps.setString(3, u.getEmail());
-			ps.setString(4, u.getAddress());
-			ps.setString(5, u.getPhoneNumber());
-			ps.setBoolean(6, u.isAdmin());
-			ps.setInt(7, u.getGender());
-			
-			ps.executeUpdate();
+			synchronized(this) {
+				ps.executeUpdate();
+			}
 		}
-	}*/
+	}
+	
+	
 	
 /*
 	public void decreaseQuantity(int productId) throws SQLException {

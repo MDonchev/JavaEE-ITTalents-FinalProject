@@ -1,6 +1,7 @@
 package com.nargilemag.controller;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nargilemag.model.Gender;
+import com.nargilemag.model.Product;
 import com.nargilemag.model.User;
 import com.nargilemag.model.dao.UserDao;
 import com.nargilemag.util.exceptions.UserDataException;
@@ -37,6 +39,7 @@ public class UserController {
 			
 			if(u != null) {
 				request.getSession().setAttribute("user", u);
+				request.getSession().setAttribute("cart", new HashMap<Product,Integer>());
 				//getServletConfig().getServletContext().setAttribute("products", ProductDao.getInstance().getAll());
 				return "redirect:/";
 			}
@@ -93,6 +96,7 @@ public class UserController {
 			//save user in data base and current session
 			UserDao.INSTANCE.saveUser(u);
 			request.getSession().setAttribute("user", u);
+			request.getSession().setAttribute("cart", new HashMap<Product,Integer>());
 			//TODO
 			//getServletConfig().getServletContext().setAttribute("products", ProductDao.getInstance().getAll());
 			
