@@ -69,6 +69,32 @@ public enum ProductDao {
 		
 		return products;
 	}
+	
+public List<Product> getAllProducts() throws SQLException {
+		
+		String sql = "SELECT id, name, description, price, ammount_in_stock, category_id FROM products";
+		
+		ArrayList<Product> products = new ArrayList();
+		
+		try(PreparedStatement ps = connection.prepareStatement(sql);){
+			
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				products.add(new Product(
+						rs.getString("name"),
+						rs.getString("description"),
+						rs.getDouble("price"),
+						rs.getInt("ammount_in_stock"),
+						rs.getInt("category_id"),
+						rs.getInt("categories_id"),
+						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(rs.getInt("id"))));
+			}
+			
+		}
+		
+		return products;
+	}
+	
 	/*
 	public synchronized void saveProduct(Product prod) throws SQLException {
 		String sql = "INSERT INTO products () VALUES ();";
