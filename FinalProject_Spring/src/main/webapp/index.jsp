@@ -17,6 +17,9 @@
 				<form action="logout" method="post">
 					<input type='submit' value='Logout' />
 				</form>
+				<form action="addproduct" method="get">
+					<input type='submit' value='Add Product' />
+				</form>
 				
 		<%} else {%>	
 			<form action="login">

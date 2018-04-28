@@ -4,10 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.nargilemag.model.Characteristic;
+import com.nargilemag.model.Gender;
 
 
 public enum CharacteristicDao {
@@ -36,14 +38,37 @@ public enum CharacteristicDao {
 						new Characteristic(
 								rs.getString("name"),
 								rs.getString("unit"),
-								rs.getString("value")));
+								rs.getInt("value")));
 			}
 			
 		}
 		
 		return characteristics;
+	}
+	public List<Characteristic> getAllCharacteristics() throws SQLException{
+		String sql = "SELECT id, name FROM characteristics;";
+		Statement s = connection.createStatement();
+		ResultSet result = s.executeQuery(sql);
+		List<Characteristic> character = new ArrayList<>();
+		while(result.next()) {
+			character.add(new Characteristic(result.getInt("id"),result.getString("name"),null,0));
+		}
 		
-		
+		return character;
 	}
 	
+	public String getCharacteristicNameByID(int id) throws SQLException {
+		
+		String sql = "SELECT name FROM characteristics WHERE id = ?";
+		
+		try(PreparedStatement ps = connection.prepareStatement(sql)){
+			ps.setInt(1, id);
+			
+			ResultSet result = ps.executeQuery();
+			if (result.next()) {
+				return result.getString("name");
+			}
+			return null;
+		}
+	}
 }

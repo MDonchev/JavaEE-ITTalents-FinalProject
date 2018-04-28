@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nargilemag.model.Characteristic;
 import com.nargilemag.model.Product;
 import com.nargilemag.model.User;
 
@@ -61,7 +62,6 @@ public enum ProductDao {
 						rs.getDouble("price"),
 						rs.getInt("ammount_in_stock"),
 						id,
-						rs.getInt("categories_id"),
 						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(id)));
 			}
 			
@@ -86,7 +86,6 @@ public enum ProductDao {
 						rs.getDouble("price"),
 						rs.getInt("ammount_in_stock"),
 						rs.getInt("category_id"),
-						rs.getInt("categories_id"),
 						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(rs.getInt("id"))));
 			}
 			
@@ -95,19 +94,54 @@ public enum ProductDao {
 		return products;
 	}
 	
-	// HOW TO DO IT
 	public void saveProduct(Product prod) throws SQLException {
-		String sql = "INSERT INTO products () VALUES ();";
-		
-		try(PreparedStatement ps = connection.prepareStatement(sql);){
+		synchronized (connection) {
 			
-			synchronized(this) {
-				ps.executeUpdate();
+			connection.setAutoCommit(false);
+			try {
+				ResultSet result = null;
+				//Insert in products table
+				try(PreparedStatement ps = connection.prepareStatement("INSERT INTO products (name, description, price, ammount_in_stock, category_id) VALUES (?,?,?,?,?);",Statement.RETURN_GENERATED_KEYS)){
+					ps.setString(1, prod.getName());
+					ps.setString(2, prod.getDescription());
+					ps.setDouble(3, prod.getPrice());
+					ps.setInt(4, prod.getAmmountInStock());
+					ps.setInt(5, prod.getCategoryId());
+					
+					ps.executeUpdate();
+					
+					result = ps.getGeneratedKeys();
+					result.next();
+					int productId = result.getInt(1);
+					
+					prod.setId(productId);
+				}
+				
+				//Insert in products_characteristics
+				List<Characteristic> characteristics = prod.getCharacrteristics();
+				for(Characteristic characteristic : characteristics) {
+					try(PreparedStatement ps = connection.prepareStatement("INSERT INTO products_have_characteristics (products_id, characteristics_id, value) VALUES (?,?,?);")){
+						System.out.println(prod.getId());
+						ps.setInt(1, prod.getId());
+						ps.setInt(2, characteristic.getId());
+						ps.setInt(3, characteristic.getValue());
+						ps.executeUpdate();
+					}
+				}
+				connection.commit();
+			}
+			catch(SQLException e) {
+				//Rollback 
+				connection.rollback();
+				throw e;
+			}
+			finally {
+				connection.setAutoCommit(true);
 			}
 		}
+	
+
 	}
-	
-	
 	
 /*
 	public void decreaseQuantity(int productId) throws SQLException {

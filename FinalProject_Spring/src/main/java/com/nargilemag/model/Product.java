@@ -1,5 +1,6 @@
 package com.nargilemag.model;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Product {
@@ -10,26 +11,22 @@ public class Product {
 	private double price;
 	private int ammountInStock;
 	private int categoryId;
-	private int subcategoryId;
 	
 	private List<Characteristic> characrteristics;
 	
 	//constructors
-	public Product(int id, String name, String description, double price, int ammountInStock, int categoryId,
-			int subcategoryId, List<Characteristic> characrteristics) {
-		this(name, description, price, ammountInStock, categoryId, subcategoryId, characrteristics);
+	public Product(int id, String name, String description, double price, int ammountInStock, int categoryId, List<Characteristic> characrteristics) {
+		this(name, description, price, ammountInStock, categoryId, characrteristics);
 		this.id = id;
 	}
 	
 
-	public Product(String name, String description, double price, int ammountInStock, int categoryId,
-			int subcategoryId, List<Characteristic> characrteristics) {
+	public Product(String name, String description, double price, int ammountInStock, int categoryId, List<Characteristic> characrteristics) {
 		this.name = name;
 		this.description = description;
 		this.price = price;
 		this.ammountInStock = ammountInStock;
 		this.categoryId = categoryId;
-		this.subcategoryId = subcategoryId;
 		this.characrteristics = characrteristics;
 	}
 
@@ -83,7 +80,11 @@ public class Product {
 	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
 	}
-	
+
+
+	public List<Characteristic> getCharacrteristics() {
+		return Collections.unmodifiableList(characrteristics);
+	}
 	
 	
 }
