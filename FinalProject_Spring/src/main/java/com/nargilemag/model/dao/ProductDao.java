@@ -76,21 +76,19 @@ public enum ProductDao {
 		
 		ArrayList<Product> products = new ArrayList();
 		
-		try(PreparedStatement ps = connection.prepareStatement(sql);){
+		Statement s = connection.createStatement();
+		ResultSet result = s.executeQuery(sql);
 			
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()) {
+		while(result.next()) {
+				System.out.println("in cycle in cycle in cycle in cycle");
 				products.add(new Product(
-						rs.getString("name"),
-						rs.getString("description"),
-						rs.getDouble("price"),
-						rs.getInt("ammount_in_stock"),
-						rs.getInt("category_id"),
-						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(rs.getInt("id"))));
-			}
-			
+						result.getString("name"),
+						result.getString("description"),
+						result.getDouble("price"),
+						result.getInt("ammount_in_stock"),
+						result.getInt("category_id"),
+						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(result.getInt("id"))));
 		}
-		
 		return products;
 	}
 	
