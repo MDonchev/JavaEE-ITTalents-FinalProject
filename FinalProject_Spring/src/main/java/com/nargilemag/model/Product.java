@@ -1,6 +1,8 @@
 package com.nargilemag.model;
 
-public abstract class Product {
+import java.util.List;
+
+public class Product {
 
 	private int id;
 	private String name;
@@ -10,22 +12,25 @@ public abstract class Product {
 	private int categoryId;
 	private int subcategoryId;
 	
+	private List<Characteristic> characrteristics;
+	
 	//constructors
 	public Product(int id, String name, String description, double price, int ammountInStock, int categoryId,
-			int subcategoryId) {
-		this(name, description, price, ammountInStock, categoryId, subcategoryId);
+			int subcategoryId, List<Characteristic> characrteristics) {
+		this(name, description, price, ammountInStock, categoryId, subcategoryId, characrteristics);
 		this.id = id;
 	}
 	
 
 	public Product(String name, String description, double price, int ammountInStock, int categoryId,
-			int subcategoryId) {
+			int subcategoryId, List<Characteristic> characrteristics) {
 		this.name = name;
 		this.description = description;
 		this.price = price;
 		this.ammountInStock = ammountInStock;
 		this.categoryId = categoryId;
 		this.subcategoryId = subcategoryId;
+		this.characrteristics = characrteristics;
 	}
 
 
