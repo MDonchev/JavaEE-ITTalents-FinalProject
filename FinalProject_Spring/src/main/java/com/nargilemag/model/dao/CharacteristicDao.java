@@ -10,8 +10,6 @@ import java.util.List;
 import com.nargilemag.model.Characteristic;
 
 
-
-
 public enum CharacteristicDao {
 
 	INSTANCE;
