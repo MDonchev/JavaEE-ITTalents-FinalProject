@@ -68,7 +68,7 @@ CREATE TABLE `characteristics` (
 
 LOCK TABLES `characteristics` WRITE;
 /*!40000 ALTER TABLE `characteristics` DISABLE KEYS */;
-INSERT INTO `characteristics` VALUES (1,'height','cm',1),(2,'weight','gr',2),(3,'number',NULL,3);
+INSERT INTO `characteristics` VALUES (1,'numberOfHoses',NULL,1),(2,'weight','gr',2),(3,'numberCubes',NULL,3);
 /*!40000 ALTER TABLE `characteristics` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,6 +97,30 @@ CREATE TABLE `favorite_products` (
 LOCK TABLES `favorite_products` WRITE;
 /*!40000 ALTER TABLE `favorite_products` DISABLE KEYS */;
 /*!40000 ALTER TABLE `favorite_products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `genders`
+--
+
+DROP TABLE IF EXISTS `genders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `genders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `genders`
+--
+
+LOCK TABLES `genders` WRITE;
+/*!40000 ALTER TABLE `genders` DISABLE KEYS */;
+INSERT INTO `genders` VALUES (1,'Male'),(2,'Female');
+/*!40000 ALTER TABLE `genders` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -199,7 +223,7 @@ CREATE TABLE `products` (
   PRIMARY KEY (`id`,`category_id`),
   KEY `fk_product_category_idx` (`category_id`),
   CONSTRAINT `fk_product_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -208,6 +232,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` VALUES (6,'Product1','Product1-Description1',123,2,4),(7,'Product2','Product2-Description1',312,5,8),(8,'Product3','Description3',432,12,9);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -221,7 +246,7 @@ DROP TABLE IF EXISTS `products_have_characteristics`;
 CREATE TABLE `products_have_characteristics` (
   `products_id` int(50) NOT NULL,
   `characteristics_id` int(10) NOT NULL,
-  `value` varchar(200) NOT NULL,
+  `value` int(11) NOT NULL,
   PRIMARY KEY (`products_id`,`characteristics_id`),
   KEY `fk_products_has_characteristics_characteristics1_idx` (`characteristics_id`),
   KEY `fk_products_has_characteristics_products1_idx` (`products_id`),
@@ -236,6 +261,7 @@ CREATE TABLE `products_have_characteristics` (
 
 LOCK TABLES `products_have_characteristics` WRITE;
 /*!40000 ALTER TABLE `products_have_characteristics` DISABLE KEYS */;
+INSERT INTO `products_have_characteristics` VALUES (6,1,2),(7,2,250),(8,2,435);
 /*!40000 ALTER TABLE `products_have_characteristics` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -247,16 +273,18 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
-  `id` int(50) unsigned NOT NULL,
+  `id` int(50) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(16) NOT NULL,
-  `password` varchar(32) NOT NULL,
+  `password` varchar(512) NOT NULL,
   `email` varchar(255) NOT NULL,
   `address` varchar(255) DEFAULT NULL,
   `phone_number` varchar(10) DEFAULT NULL,
   `is_admin` tinyint(4) NOT NULL,
-  `sex` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `gender_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_grade_id` (`gender_id`),
+  CONSTRAINT `fk_grade_id` FOREIGN KEY (`gender_id`) REFERENCES `genders` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -265,6 +293,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'mdonchev96','$2a$10$wwEj8.cLbOeQeRxs4JpoEeWi4QCyVvw6BJm7Rml3tkf/vuAu1iBYC','mdonchev@abv.bg','Vasil Petleshkov 6','0898876906',1,1),(2,'rangel96','$2a$10$gX.f9kmoMBasJx0V9D3Qme3jLSN8SUvKXeDk6ksObxSMafG.4gRkm','rangel@abv.bg','Bul. Bulgaria 6','0898123456',0,1),(3,'testUser','$2a$10$AvL2XSWa928TAOfX1c4QFu7PQNRebYFyqA.QZKQeUywLr92VUX8sy','testEmail@abv.bg','Vasil Levski 6','0899654321',0,2),(4,'testUsername','$2a$10$YzANZ1MsBJ6x5LmNOegf/u5QZ7VR/E0hMfPmbrdKqD6OCtzVeByri','testEmail2@abv.bg','Hristo Botev 5','0891137562',0,2),(5,'chocho123','$2a$10$X2a/MnG9jo7Mqez.UHeFCeM4yUZ5Qm1xjvXRIyfYC1nML7KVXenTG','chocho@abv.bg','Vasil Levski 6','0891472486',0,2);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -277,4 +306,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-17 21:05:34
+-- Dump completed on 2018-04-29 21:43:48
