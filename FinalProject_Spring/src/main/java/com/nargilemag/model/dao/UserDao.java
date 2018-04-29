@@ -31,7 +31,7 @@ public enum UserDao implements IUserDao{
 	public synchronized void saveUser(User u) throws SQLException {
 		String sql = "INSERT INTO users (username,password,email,address,phone_number,is_admin,gender_id) VALUES (?,?,?,?,?,?,?);";
 		
-		try(PreparedStatement ps = connection.prepareStatement(sql);){
+		try(PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);){
 			
 			String hashedPass = u.hashPassword();
 			
@@ -44,6 +44,8 @@ public enum UserDao implements IUserDao{
 			ps.setInt(7, u.getGender());
 			
 			ps.executeUpdate();
+			
+			u.setId(ps.getGeneratedKeys().getInt(1));
 		}
 	}
 	
@@ -60,11 +62,13 @@ public enum UserDao implements IUserDao{
 
 		
 		if(result.next() && BCrypt.checkpw(pass, result.getString("password"))) {
-			return new User(result.getString("username"),
+			return new User(result.getInt("id"),
+							result.getString("username"),
 							result.getString("password"),
 							result.getString("email"),
 							result.getString("address"),
 							result.getString("phone_number"),
+							5000,
 							result.getInt("gender_id"),
 							result.getBoolean("is_admin")
 							);

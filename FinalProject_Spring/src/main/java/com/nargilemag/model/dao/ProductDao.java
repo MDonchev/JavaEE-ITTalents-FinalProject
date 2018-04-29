@@ -15,6 +15,8 @@ import com.nargilemag.model.User;
 
 public enum ProductDao {
 
+	//TODO: adding and romving products form DB should be synchronized actions
+	
 	INSTANCE;
 	
 	private Connection connection;
@@ -54,6 +56,15 @@ public enum ProductDao {
 			
 		}
 		return p;
+	}
+	
+	public void updateProductAmmountInStock(int id, int newAmmount) throws SQLException {
+		String sql = "UPDATE products SET ammount_in_stock = ? WHERE id = ?";
+		PreparedStatement ps = connection.prepareStatement(sql);
+		ps.setInt(1, newAmmount);
+		ps.setInt(2, id);
+		
+		ps.executeUpdate();
 	}
 	
 	public int getProductCharacteristicById(int id) throws SQLException {
@@ -140,7 +151,7 @@ public enum ProductDao {
 				}
 				
 				//Insert in products_characteristics
-				List<Characteristic> characteristics = prod.getCharacrteristics();
+				List<Characteristic> characteristics = prod.getCharacteristics();
 				for(Characteristic characteristic : characteristics) {
 					try(PreparedStatement ps = connection.prepareStatement("INSERT INTO products_have_characteristics (products_id, characteristics_id, value) VALUES (?,?,?);")){
 						System.out.println(prod.getId());
