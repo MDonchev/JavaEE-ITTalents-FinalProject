@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import com.nargilemag.model.User;
 import com.nargilemag.model.dao.UserDao;
 import com.nargilemag.util.exceptions.UserDataException;
 import com.nargilemag.util.validation.UserCredentialsValidation;
+
 
 
 @Controller
@@ -40,7 +42,6 @@ public class UserController {
 			if(u != null) {
 				request.getSession().setAttribute("user", u);
 				request.getSession().setAttribute("cart", new HashMap<Product,Integer>());
-				//getServletConfig().getServletContext().setAttribute("products", ProductDao.getInstance().getAll());
 				return "redirect:/";
 			}
 			else {
@@ -57,7 +58,7 @@ public class UserController {
 		}
 	}
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
-	public String userLogout(HttpServletRequest request) throws SQLException {
+	public String userLogout(HttpServletRequest request){
 		HttpSession session = request.getSession();
 		session.invalidate();
 		return "redirect:/";
@@ -113,6 +114,23 @@ public class UserController {
 		}
 	}
 	
+	@RequestMapping(value= "/addToCart", method = RequestMethod.GET)
+	public String showAddToCart(Model m, HttpServletRequest request) {
+		
+		int productId = Integer.parseInt(request.getParameter("ordered_product"));
+		request.setAttribute("productID", productId);
+		
+		return "addtocart";
+	}
+	
+	@RequestMapping(value= "/addToCart", method = RequestMethod.POST)
+	public String addToCart(HttpServletRequest request) {
+		Integer amount = Integer.parseInt((String)request.getParameter("amount"));
+		HashMap<Product, Integer> cart = (HashMap<Product, Integer>)request.getSession().getAttribute("cart");
+		cart.put((Product)request.getAttribute("product"), amount);
+		request.getSession().setAttribute("cart", cart);
+		return "redirect:/";
+	}
 	private void validateData (String name, String password1 ,String password2 ,String email, String address, String phoneNumber) throws UserDataException{
 		if (!password1.equals(password2)) {
 			throw new UserDataException("Password mismatch.");

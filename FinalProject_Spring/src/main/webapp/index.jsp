@@ -53,7 +53,8 @@
 					<td><%= p.getCharacrteristics().get(0).getName()%> : <%=p.getCharacrteristics().get(0).getValue()%></td>
 					<% if (user != null) {%>
 						<td>
-							<form action="/addToCart" method="POST">
+							<form action="addToCart" method="GET">
+								<input type="hidden" name="ordered_product" value="<%= p.getId()%>">
 								<input type="submit" value="Add to cart">
 							</form>
 						</td>
@@ -61,6 +62,10 @@
 				</tr>
 			<%} %>
 		</table>
+		
+		
+		<a href="#"> Show Cart</a>
+		
 	</center>
 </body>
 </html>

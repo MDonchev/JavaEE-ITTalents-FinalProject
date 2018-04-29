@@ -32,6 +32,30 @@ public enum ProductDao {
 		return ps.executeQuery().getString(1);
 	}
 	
+	public Product getProductBtID(int id) throws SQLException {
+
+		String sql = "SELECT id, name, description, price, ammount_in_stock, category_id FROM products WHERE id = ?";
+		Product p = null;
+		try(PreparedStatement ps = connection.prepareStatement(sql);){
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				p = new Product(
+						rs.getInt("id"),
+						rs.getString("name"),
+						rs.getString("description"),
+						rs.getDouble("price"),
+						rs.getInt("ammount_in_stock"),
+						rs.getInt("category_id"),
+						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(id));
+			}
+			
+		}
+		return p;
+	}
+	
 	public int getProductCharacteristicById(int id) throws SQLException {
 		String sql = "SELECT value FROM products_have_characteristics WHERE products_id = ?";
 		
@@ -80,8 +104,8 @@ public enum ProductDao {
 		ResultSet result = s.executeQuery(sql);
 			
 		while(result.next()) {
-				System.out.println("in cycle in cycle in cycle in cycle");
 				products.add(new Product(
+						result.getInt("id"),
 						result.getString("name"),
 						result.getString("description"),
 						result.getDouble("price"),
