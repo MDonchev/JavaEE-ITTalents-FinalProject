@@ -50,7 +50,7 @@
 					<td><%= p.getDescription() %></td>
 					<td><%= p.getPrice() %></td>
 					<td><%= p.getAmmountInStock() %></td>
-					<td><%= p.getCharacrteristics().get(0).getName()%> : <%=p.getCharacrteristics().get(0).getValue()%></td>
+					<td><%= p.getCharacteristics().get(0).getName()%> : <%=p.getCharacteristics().get(0).getValue()%></td>
 					<% if (user != null) {%>
 						<td>
 							<form action="addToCart" method="GET">
@@ -64,7 +64,7 @@
 		</table>
 		
 		
-		<a href="#"> Show Cart</a>
+		<a href="order"> Show Cart</a>
 		
 	</center>
 </body>

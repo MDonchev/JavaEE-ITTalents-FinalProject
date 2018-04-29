@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.nargilemag.model.Gender;
 import com.nargilemag.model.Product;
 import com.nargilemag.model.User;
+import com.nargilemag.model.dao.ProductDao;
 import com.nargilemag.model.dao.UserDao;
 import com.nargilemag.util.exceptions.UserDataException;
 import com.nargilemag.util.validation.UserCredentialsValidation;
@@ -93,7 +95,7 @@ public class UserController {
 			validateData(username, password1, password2, email, address, phoneNumber);
 			
 			//create user
-			User u = new User(username, password1, email, address, phoneNumber, gender, false);
+			User u = new User(username, password1, email, address, phoneNumber, 5000, gender, false); //TODO: everyone starts with 5000 cash by default
 			//save user in data base and current session
 			UserDao.INSTANCE.saveUser(u);
 			request.getSession().setAttribute("user", u);
@@ -118,19 +120,36 @@ public class UserController {
 	public String showAddToCart(Model m, HttpServletRequest request) {
 		
 		int productId = Integer.parseInt(request.getParameter("ordered_product"));
-		request.setAttribute("productID", productId);
+		
+		Product p = null;
+		try {
+			p = ProductDao.INSTANCE.getProductBtID(productId);
+		} catch (SQLException e) {
+			request.setAttribute("exception", e);
+			return "error";
+		}
+		
+		//request.setAttribute("productID", productId);
+		request.setAttribute("product", p);
 		
 		return "addtocart";
 	}
 	
 	@RequestMapping(value= "/addToCart", method = RequestMethod.POST)
-	public String addToCart(HttpServletRequest request) {
-		Integer amount = Integer.parseInt((String)request.getParameter("amount"));
+	public String addToCart(@ModelAttribute Product product, HttpServletRequest request) {
+		Integer ammount = Integer.parseInt((String)request.getParameter("ammount"));
 		HashMap<Product, Integer> cart = (HashMap<Product, Integer>)request.getSession().getAttribute("cart");
-		cart.put((Product)request.getAttribute("product"), amount);
+//		Product product = (Product)request.getAttribute("product");
+		
+		if(!cart.containsKey(product)) {
+			cart.put(product, 0);
+		}
+		cart.put(product, cart.get(product) + ammount);
+		
 		request.getSession().setAttribute("cart", cart);
 		return "redirect:/";
 	}
+	
 	private void validateData (String name, String password1 ,String password2 ,String email, String address, String phoneNumber) throws UserDataException{
 		if (!password1.equals(password2)) {
 			throw new UserDataException("Password mismatch.");
