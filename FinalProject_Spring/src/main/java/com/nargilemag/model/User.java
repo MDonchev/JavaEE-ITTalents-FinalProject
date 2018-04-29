@@ -1,5 +1,6 @@
 package com.nargilemag.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -14,27 +15,29 @@ public class User {
 	private String email;
 	private String address;
 	private String phoneNumber;
+	private double balance;
 	private int gender_id;
 	private boolean isAdmin;
 	
 	private List<Integer> favoriteProducts;
 	
 	//constructors
-	public User(String username, String password, String email, String address, String phoneNumber, int gender, boolean isAdmin) {
+	public User(String username, String password, String email, String address, String phoneNumber, double balance, int gender, boolean isAdmin) {
 		
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
+		this.balance = balance;
 		this.gender_id = gender;
 		this.isAdmin = isAdmin;
 	}
 
-	public User(int id, String username, String password, String email, String address, String phoneNumber, int gender, boolean isAdmin, List<Integer> favoriteProducts){
-		this(username, password, email, address, phoneNumber, gender, isAdmin);
+	public User(int id, String username, String password, String email, String address, String phoneNumber, double balance, int gender, boolean isAdmin){
+		this(username, password, email, address, phoneNumber, balance, gender, isAdmin);
 		this.id = id;
-		this.favoriteProducts = favoriteProducts;
+		this.favoriteProducts = new ArrayList<>();
 	}
 
 	public String getUsername() {
@@ -52,7 +55,15 @@ public class User {
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
+	
+	public double getBalance() {
+		return balance;
+	}
 
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+	
 	public int getGender() {
 		return gender_id;
 	}
@@ -63,6 +74,10 @@ public class User {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public Collection<Integer> getFavorites(){

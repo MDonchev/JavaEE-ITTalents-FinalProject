@@ -1,6 +1,7 @@
 package com.nargilemag.model;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 public class Order {
 
@@ -10,16 +11,19 @@ public class Order {
 	private String phoneNumber;
 	private int userId;
 	
+	Map<Product, Integer> orderedProducts;
+	
 	//constructors
-	public Order(LocalDate dateOfIssue, String address, String phoneNumber, int userId) {
+	public Order(LocalDate dateOfIssue, String address, String phoneNumber, int userId, Map<Product, Integer> orderedProducts) {
 		this.dateOfIssue = dateOfIssue;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
 		this.userId = userId;
+		this.orderedProducts = orderedProducts;
 	}
 
-	public Order(int id, LocalDate dateOfIssue, String address, String phoneNumber, int userId) {
-		this(dateOfIssue, address, phoneNumber, userId);
+	public Order(int id, LocalDate dateOfIssue, String address, String phoneNumber, int userId, Map<Product, Integer> orderedProducts) {
+		this(dateOfIssue, address, phoneNumber, userId, orderedProducts);
 		this.id = id;
 	}
 
