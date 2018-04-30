@@ -163,13 +163,23 @@ public class UserController {
 		
 		return "redirect:/";
 	}
+	@RequestMapping(value= "/removeFavourite", method = RequestMethod.POST)
+	public String removeFromFavourites(HttpServletRequest request) {
+		
+		User u = (User)request.getSession().getAttribute("user");
+		int productId = Integer.parseInt(request.getParameter("fav_product"));
+		
+		try {
+			UserDao.INSTANCE.removeFromFavourites(u.getId(),productId);
+		} catch (SQLException e) {
+			request.setAttribute("exception", e);
+			return "error";
+		}
+		
+		return "redirect:/";
+	}
 	
-	
-	
-	
-	
-	
-	
+		
 	private void validateData (String name, String password1 ,String password2 ,String email, String address, String phoneNumber) throws UserDataException{
 		if (!password1.equals(password2)) {
 			throw new UserDataException("Password mismatch.");

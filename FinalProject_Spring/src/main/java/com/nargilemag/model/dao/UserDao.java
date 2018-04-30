@@ -117,4 +117,17 @@ public enum UserDao implements IUserDao{
 		}
 	}
 
+	public void removeFromFavourites(int userID, int productId) throws SQLException{
+		String sql = "DELETE FROM favorite_products WHERE users_id = ? AND product_id = ?;";
+		
+		try(PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);){
+			
+			ps.setInt(1, userID);
+			ps.setInt(2, productId);
+			
+			ps.executeUpdate();
+		}
+		
+	}
+
 }

@@ -84,6 +84,12 @@
 					<td><%= p.getPrice() %></td>
 					<td><%= p.getAmmountInStock() %></td>
 					<td><%= p.getCharacteristics().get(0).getName()%> : <%=p.getCharacteristics().get(0).getValue()%></td>
+					<td>
+						<form action="removeFavourite" method="POST">
+							<input type="hidden" name="fav_product" value="<%= p.getId()%>">
+							<input type="submit" value="Remove to favourites">
+						</form>
+					</td>
 				</tr>
 			<%} %>
 		</table>
