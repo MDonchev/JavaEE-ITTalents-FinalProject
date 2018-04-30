@@ -26,6 +26,9 @@
 				<form action="addproduct" method="get">
 					<input type='submit' value='Add Product' />
 				</form>
+				<form action="updateProductAmount" method="get">
+					<input type='submit' value='Update Products Amount' />
+				</form>
 				<%} %>
 				
 		<%} else {%>	
