@@ -29,7 +29,7 @@ public class User {
 		this.email = email;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
-		this.balance = balance;
+		this.balance = balance;//TODO: DB!!!
 		this.gender_id = gender;
 		this.isAdmin = isAdmin;
 	}

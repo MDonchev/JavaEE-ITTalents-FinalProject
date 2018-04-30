@@ -51,7 +51,7 @@ public enum UserDao implements IUserDao{
 	
 	// TODO : make it better
 	public User getUserFromLogin(String username, String pass) throws SQLException, UserDataException {
-		String sql = "SELECT id, username, password, email, address, phone_number, is_admin, gender_id FROM users WHERE username = ?";
+		String sql = "SELECT id, username, password, email, address, phone_number, is_admin, balance, gender_id FROM users WHERE username = ?";
 		
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setString(1, username);
@@ -68,7 +68,7 @@ public enum UserDao implements IUserDao{
 							result.getString("email"),
 							result.getString("address"),
 							result.getString("phone_number"),
-							5000,
+							result.getDouble("balance"),
 							result.getInt("gender_id"),
 							result.getBoolean("is_admin")
 							);
@@ -90,6 +90,21 @@ public enum UserDao implements IUserDao{
 			genders.add(new Gender(result.getInt("id"), result.getString("type")));
 		}
 		return genders;
+	}
+	
+	
+	public void updateBalanceById(int id, double newBalance) throws SQLException {
+		String sql = "UPDATE users SET balance = ? WHERE id = ?";
+		
+		try(PreparedStatement ps = connection.prepareStatement(sql)){
+			ps.setDouble(1, newBalance);
+			ps.setInt(2, id);
+			
+			int rowsAffected = ps.executeUpdate();
+			if(rowsAffected == 0) {
+				throw new SQLException("balance update failed, 0 rows affected");
+			}
+		}
 	}
 
 }

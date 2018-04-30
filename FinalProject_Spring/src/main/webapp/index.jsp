@@ -17,6 +17,7 @@
 		<% User user = (User) session.getAttribute("user");
 			if (user != null) { %>
 				<h1>Welcome, <%= user.getUsername() %></h1>
+				<h3 style="color:green; text-align: right"><%= user.getBalance() %>$</h3>
 				<form action="logout" method="post">
 					<input type='submit' value='Logout' />
 				</form>

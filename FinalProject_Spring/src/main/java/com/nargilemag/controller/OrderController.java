@@ -19,6 +19,7 @@ import com.nargilemag.model.Product;
 import com.nargilemag.model.User;
 import com.nargilemag.model.dao.OrderDao;
 import com.nargilemag.model.dao.ProductDao;
+import com.nargilemag.model.dao.UserDao;
 import com.nargilemag.util.exceptions.NotEnoughMoneyForOrderException;
 import com.nargilemag.util.exceptions.OrderedProductsAmmountException;
 
@@ -64,6 +65,8 @@ public class OrderController {
 				ProductDao.INSTANCE.updateProductAmmountInStock(product.getId(), product.getAmmountInStock() - cart.get(product));
 				
 			}
+			
+			UserDao.INSTANCE.updateBalanceById(user.getId(), user.getBalance() - totalPrice);
 			user.setBalance(user.getBalance() - totalPrice);
 			
 			

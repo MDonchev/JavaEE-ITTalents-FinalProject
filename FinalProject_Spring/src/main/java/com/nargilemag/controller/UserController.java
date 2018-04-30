@@ -95,7 +95,7 @@ public class UserController {
 			validateData(username, password1, password2, email, address, phoneNumber);
 			
 			//create user
-			User u = new User(username, password1, email, address, phoneNumber, 5000, gender, false); //TODO: everyone starts with 5000 cash by default
+			User u = new User(username, password1, email, address, phoneNumber, 500, gender, false); //TODO: everyone starts with 500 cash by default
 			//save user in data base and current session
 			UserDao.INSTANCE.saveUser(u);
 			request.getSession().setAttribute("user", u);
