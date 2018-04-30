@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `nargilemag` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `nargilemag`;
--- MySQL dump 10.13  Distrib 5.5.59, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: nargilemag
 -- ------------------------------------------------------
--- Server version	5.5.59-0ubuntu0.14.04.1
+-- Server version	5.7.21-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -139,7 +139,7 @@ CREATE TABLE `orders` (
   PRIMARY KEY (`id`),
   KEY `fk_orders_users1_idx` (`users_id`),
   CONSTRAINT `fk_orders_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -148,6 +148,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES (9,'2018-04-30','notnull','0881234567',6),(10,'2018-04-30','notnull','0881234567',6),(11,'2018-04-30','notnull','0881234567',6),(12,'2018-04-30','notnull','0881234567',6),(13,'2018-04-30','notnull','0881234567',6),(14,'2018-04-30','notnull','0881234567',6),(15,'2018-04-30','notnull','0881234567',6),(16,'2018-04-30','notnull','0881234567',6),(17,'2018-04-30','notnull','0881234567',6),(18,'2018-04-30','notnull','0881234567',6),(19,'2018-04-30','notnull','0881234567',6);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -175,6 +176,7 @@ CREATE TABLE `orders_has_products` (
 
 LOCK TABLES `orders_has_products` WRITE;
 /*!40000 ALTER TABLE `orders_has_products` DISABLE KEYS */;
+INSERT INTO `orders_has_products` VALUES (14,6),(12,7),(16,8),(18,8);
 /*!40000 ALTER TABLE `orders_has_products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,7 +234,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (6,'Product1','Product1-Description1',123,2,4),(7,'Product2','Product2-Description1',312,5,8),(8,'Product3','Description3',432,12,9);
+INSERT INTO `products` VALUES (6,'Product1','Product1-Description1',123,1,4),(7,'Product2','Product2-Description1',312,3,8),(8,'Product3','Description3',432,10,9);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -281,10 +283,11 @@ CREATE TABLE `users` (
   `phone_number` varchar(10) DEFAULT NULL,
   `is_admin` tinyint(4) NOT NULL,
   `gender_id` int(11) NOT NULL,
+  `balance` double DEFAULT '500',
   PRIMARY KEY (`id`),
   KEY `fk_grade_id` (`gender_id`),
   CONSTRAINT `fk_grade_id` FOREIGN KEY (`gender_id`) REFERENCES `genders` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -293,7 +296,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'mdonchev96','$2a$10$wwEj8.cLbOeQeRxs4JpoEeWi4QCyVvw6BJm7Rml3tkf/vuAu1iBYC','mdonchev@abv.bg','Vasil Petleshkov 6','0898876906',1,1),(2,'rangel96','$2a$10$gX.f9kmoMBasJx0V9D3Qme3jLSN8SUvKXeDk6ksObxSMafG.4gRkm','rangel@abv.bg','Bul. Bulgaria 6','0898123456',0,1),(3,'testUser','$2a$10$AvL2XSWa928TAOfX1c4QFu7PQNRebYFyqA.QZKQeUywLr92VUX8sy','testEmail@abv.bg','Vasil Levski 6','0899654321',0,2),(4,'testUsername','$2a$10$YzANZ1MsBJ6x5LmNOegf/u5QZ7VR/E0hMfPmbrdKqD6OCtzVeByri','testEmail2@abv.bg','Hristo Botev 5','0891137562',0,2),(5,'chocho123','$2a$10$X2a/MnG9jo7Mqez.UHeFCeM4yUZ5Qm1xjvXRIyfYC1nML7KVXenTG','chocho@abv.bg','Vasil Levski 6','0891472486',0,2);
+INSERT INTO `users` VALUES (1,'mdonchev96','$2a$10$wwEj8.cLbOeQeRxs4JpoEeWi4QCyVvw6BJm7Rml3tkf/vuAu1iBYC','mdonchev@abv.bg','Vasil Petleshkov 6','0898876906',1,1,500),(2,'rangel96','$2a$10$gX.f9kmoMBasJx0V9D3Qme3jLSN8SUvKXeDk6ksObxSMafG.4gRkm','rangel@abv.bg','Bul. Bulgaria 6','0898123456',0,1,500),(3,'testUser','$2a$10$AvL2XSWa928TAOfX1c4QFu7PQNRebYFyqA.QZKQeUywLr92VUX8sy','testEmail@abv.bg','Vasil Levski 6','0899654321',0,2,500),(4,'testUsername','$2a$10$YzANZ1MsBJ6x5LmNOegf/u5QZ7VR/E0hMfPmbrdKqD6OCtzVeByri','testEmail2@abv.bg','Hristo Botev 5','0891137562',0,2,500),(5,'chocho123','$2a$10$X2a/MnG9jo7Mqez.UHeFCeM4yUZ5Qm1xjvXRIyfYC1nML7KVXenTG','chocho@abv.bg','Vasil Levski 6','0891472486',0,2,500),(6,'Boronatora','$2a$10$R9NgSiL935zvwXXpvyAvFO2lCGfCUzg3yqSDlpm7jGkE8.NQ8.eUy','boro@nato.ra','notnull','0881234567',1,1,5000);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -306,4 +309,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-29 21:43:48
+-- Dump completed on 2018-04-30 13:13:52
