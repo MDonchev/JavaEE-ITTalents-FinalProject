@@ -176,6 +176,29 @@ public enum ProductDao {
 
 	}
 	
+	public List<Product> getUserFavourites(User u) throws SQLException {
+
+		String sql = "SELECT p.id, name, description, price, ammount_in_stock, category_id FROM favorite_products AS fp JOIN products AS p ON fp.product_id = p.id WHERE fp.users_id = ?";
+		
+		ArrayList<Product> products = new ArrayList();
+		
+		try(PreparedStatement ps = connection.prepareStatement(sql);){
+			ps.setInt(1, u.getId());
+			ResultSet result = ps.executeQuery();
+				
+			while(result.next()) {
+					products.add(new Product(
+							result.getInt("id"),
+							result.getString("name"),
+							result.getString("description"),
+							result.getDouble("price"),
+							result.getInt("ammount_in_stock"),
+							result.getInt("category_id"),
+							CharacteristicDao.INSTANCE.getCharacteristicsByProductId(result.getInt("id"))));
+			}
+		}
+		return products;
+	}
 /*
 	public void decreaseQuantity(int productId) throws SQLException {
 		String sql = "UPDATE products SET quantity = quantity - 1 WHERE id = ?";

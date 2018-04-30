@@ -57,8 +57,6 @@ public enum UserDao implements IUserDao{
 		ps.setString(1, username);
 		ResultSet result = ps.executeQuery();
 		
-		// TODO
-		List<Integer> favourites = new ArrayList<>();
 
 		
 		if(result.next() && BCrypt.checkpw(pass, result.getString("password"))) {
@@ -77,9 +75,7 @@ public enum UserDao implements IUserDao{
 			return null;
 		}
 	}
-	
-	
-	
+		
 
 	public List<Gender> getAllGenders() throws SQLException {
 		String sql = "SELECT id, type FROM genders;";
@@ -104,6 +100,20 @@ public enum UserDao implements IUserDao{
 			if(rowsAffected == 0) {
 				throw new SQLException("balance update failed, 0 rows affected");
 			}
+		}
+	}
+
+	
+	
+	public void addToFavorites(int userID, int productId) throws SQLException {
+		String sql = "INSERT INTO favorite_products (users_id,product_id) VALUES (?,?);";
+		
+		try(PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);){
+			
+			ps.setInt(1, userID);
+			ps.setInt(2, productId);
+			
+			ps.executeUpdate();
 		}
 	}
 

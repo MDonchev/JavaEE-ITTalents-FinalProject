@@ -33,12 +33,5 @@
 		
 	</f:form>
 	
-	<!-- 
-	<form action="addToCart" method="POST">
-		Amount to order : <input type="text" name="amount">
-		<input type="submit" value="Product to cart">
-	</form>
-	 -->
-	
 </body>
 </html>

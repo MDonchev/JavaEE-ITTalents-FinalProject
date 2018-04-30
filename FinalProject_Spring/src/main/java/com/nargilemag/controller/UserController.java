@@ -129,7 +129,6 @@ public class UserController {
 			return "error";
 		}
 		
-		//request.setAttribute("productID", productId);
 		request.setAttribute("product", p);
 		
 		return "addtocart";
@@ -139,7 +138,6 @@ public class UserController {
 	public String addToCart(@ModelAttribute Product product, HttpServletRequest request) {
 		Integer ammount = Integer.parseInt((String)request.getParameter("ammount"));
 		HashMap<Product, Integer> cart = (HashMap<Product, Integer>)request.getSession().getAttribute("cart");
-//		Product product = (Product)request.getAttribute("product");
 		
 		if(!cart.containsKey(product)) {
 			cart.put(product, 0);
@@ -149,6 +147,28 @@ public class UserController {
 		request.getSession().setAttribute("cart", cart);
 		return "redirect:/";
 	}
+	
+	@RequestMapping(value= "/addToFavourites", method = RequestMethod.POST)
+	public String addToFavourites(HttpServletRequest request) {
+		
+		User u = (User)request.getSession().getAttribute("user");
+		int productId = Integer.parseInt(request.getParameter("fav_product"));
+		
+		try {
+			UserDao.INSTANCE.addToFavorites(u.getId(),productId);
+		} catch (SQLException e) {
+			request.setAttribute("exception", e);
+			return "error";
+		}
+		
+		return "redirect:/";
+	}
+	
+	
+	
+	
+	
+	
 	
 	private void validateData (String name, String password1 ,String password2 ,String email, String address, String phoneNumber) throws UserDataException{
 		if (!password1.equals(password2)) {

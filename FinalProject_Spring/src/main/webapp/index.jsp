@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="com.nargilemag.model.Product"%>
 <%@page import="com.nargilemag.model.dao.ProductDao"%>
 <%@page import="java.util.List"%>
@@ -37,6 +38,11 @@
 			
 		<%} %>
 		<% List<Product> products = ProductDao.INSTANCE.getAllProducts();%>
+		<% List<Product> userFavouritesProducts = new ArrayList<Product>();
+			if (user != null){
+				userFavouritesProducts = ProductDao.INSTANCE.getUserFavourites(user);
+			}
+			%>
 		<table>
 			<tr>
 				<td>Name:</td>
@@ -59,14 +65,31 @@
 								<input type="submit" value="Add to cart">
 							</form>
 						</td>
+						<td>
+							<form action="addToFavourites" method="POST">
+								<input type="hidden" name="fav_product" value="<%= p.getId()%>">
+								<input type="submit" value="Add to favourites">
+							</form>
+						</td>
 					<%} %>
 				</tr>
 			<%} %>
 		</table>
-		
+		<% if (user != null) {%>
+		<table>
+			<% for (Product p : userFavouritesProducts) {%>
+				<tr>
+					<td><%= p.getName() %></td>
+					<td><%= p.getDescription() %></td>
+					<td><%= p.getPrice() %></td>
+					<td><%= p.getAmmountInStock() %></td>
+					<td><%= p.getCharacteristics().get(0).getName()%> : <%=p.getCharacteristics().get(0).getValue()%></td>
+				</tr>
+			<%} %>
+		</table>
 		
 		<a href="order"> Show Cart</a>
-		
+		<%} %>
 	</center>
 </body>
 </html>
