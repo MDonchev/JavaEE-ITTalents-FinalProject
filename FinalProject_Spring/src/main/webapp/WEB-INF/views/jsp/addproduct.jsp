@@ -11,7 +11,7 @@
 	</head>
 	<body>
 			<h1>Add Product</h1>
-			<form action="addproduct" method="post">
+			<form action="addproduct" method="post" enctype="multipart/form-data">
 				<table>
 					<tr>
 						<td>
@@ -27,6 +27,14 @@
 						</td>
 						<td>
 							<input type="text" name="desc" required>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Product image
+						</td>
+						<td>
+							<input type="file" name="fail">
 						</td>
 					</tr>
 					<tr>

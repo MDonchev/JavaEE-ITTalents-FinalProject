@@ -36,7 +36,7 @@ public enum ProductDao {
 	
 	public Product getProductBtID(int id) throws SQLException {
 
-		String sql = "SELECT id, name, description, price, ammount_in_stock, category_id FROM products WHERE id = ?";
+		String sql = "SELECT id, name, description, price, ammount_in_stock, category_id, img_url FROM products WHERE id = ?";
 		Product p = null;
 		try(PreparedStatement ps = connection.prepareStatement(sql);){
 			ps.setInt(1, id);
@@ -51,7 +51,8 @@ public enum ProductDao {
 						rs.getDouble("price"),
 						rs.getInt("ammount_in_stock"),
 						rs.getInt("category_id"),
-						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(id));
+						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(id),
+						rs.getString("img_url"));
 			}
 			
 		}
@@ -78,7 +79,7 @@ public enum ProductDao {
 	
 	public List<Product> getAllProductsByCategoryId(int id) throws SQLException {
 		
-		String sql = "SELECT p.id, p.name, description, price, ammount_in_stock, category_id FROM products p"
+		String sql = "SELECT p.id, p.name, description, price, ammount_in_stock, category_id, img_url FROM products p"
 				+ "JOIN categories c ON category_id = ?";
 		
 		ArrayList<Product> products = new ArrayList();
@@ -97,7 +98,8 @@ public enum ProductDao {
 						rs.getDouble("price"),
 						rs.getInt("ammount_in_stock"),
 						id,
-						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(id)));
+						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(id),
+						rs.getString("img_url")));
 			}
 			
 		}
@@ -107,7 +109,7 @@ public enum ProductDao {
 	
 	public List<Product> getAllProducts() throws SQLException {
 		
-		String sql = "SELECT id, name, description, price, ammount_in_stock, category_id FROM products";
+		String sql = "SELECT id, name, description, price, ammount_in_stock, category_id, img_url FROM products";
 		
 		ArrayList<Product> products = new ArrayList();
 		
@@ -122,7 +124,8 @@ public enum ProductDao {
 						result.getDouble("price"),
 						result.getInt("ammount_in_stock"),
 						result.getInt("category_id"),
-						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(result.getInt("id"))));
+						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(result.getInt("id")),
+						result.getString("img_url")));
 		}
 		return products;
 	}
@@ -134,12 +137,13 @@ public enum ProductDao {
 			try {
 				ResultSet result = null;
 				//Insert in products table
-				try(PreparedStatement ps = connection.prepareStatement("INSERT INTO products (name, description, price, ammount_in_stock, category_id) VALUES (?,?,?,?,?);",Statement.RETURN_GENERATED_KEYS)){
+				try(PreparedStatement ps = connection.prepareStatement("INSERT INTO products (name, description, price, ammount_in_stock, category_id, img_url) VALUES (?,?,?,?,?,?);",Statement.RETURN_GENERATED_KEYS)){
 					ps.setString(1, prod.getName());
 					ps.setString(2, prod.getDescription());
 					ps.setDouble(3, prod.getPrice());
 					ps.setInt(4, prod.getAmmountInStock());
 					ps.setInt(5, prod.getCategoryId());
+					ps.setString(6, prod.getImgURL());
 					
 					ps.executeUpdate();
 					
@@ -178,7 +182,7 @@ public enum ProductDao {
 	
 	public List<Product> getUserFavourites(User u) throws SQLException {
 
-		String sql = "SELECT p.id, name, description, price, ammount_in_stock, category_id FROM favorite_products AS fp JOIN products AS p ON fp.product_id = p.id WHERE fp.users_id = ?";
+		String sql = "SELECT p.id, name, description, price, ammount_in_stock, category_id, img_url FROM favorite_products AS fp JOIN products AS p ON fp.product_id = p.id WHERE fp.users_id = ?";
 		
 		ArrayList<Product> products = new ArrayList();
 		
@@ -194,7 +198,8 @@ public enum ProductDao {
 							result.getDouble("price"),
 							result.getInt("ammount_in_stock"),
 							result.getInt("category_id"),
-							CharacteristicDao.INSTANCE.getCharacteristicsByProductId(result.getInt("id"))));
+							CharacteristicDao.INSTANCE.getCharacteristicsByProductId(result.getInt("id")),
+							result.getString("img_url")));
 			}
 		}
 		return products;

@@ -1,5 +1,6 @@
 package com.nargilemag.model;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,6 +10,7 @@ public class Product {
 	private int id;
 	private String name;
 	private String description;
+	private String imgURL;
 	private double price;
 	private int ammountInStock;
 	private int categoryId;
@@ -20,18 +22,19 @@ public class Product {
 		this.characteristics = new ArrayList<>();
 	}
 	
-	public Product(int id, String name, String description, double price, int ammountInStock, int categoryId, List<Characteristic> characteristics) {
-		this(name, description, price, ammountInStock, categoryId, characteristics);
+	public Product(int id, String name, String description, double price, int ammountInStock, int categoryId, List<Characteristic> characteristics, String url) {
+		this(name, description, price, ammountInStock, categoryId, characteristics,url);
 		this.id = id;
 	}
 	
-	public Product(String name, String description, double price, int ammountInStock, int categoryId, List<Characteristic> characteristics) {
+	public Product(String name, String description, double price, int ammountInStock, int categoryId, List<Characteristic> characteristics, String url) {
 		this.name = name;
 		this.description = description;
 		this.price = price;
 		this.ammountInStock = ammountInStock;
 		this.categoryId = categoryId;
 		this.characteristics = characteristics;
+		this.imgURL = url;
 	}
 
 
@@ -92,6 +95,14 @@ public class Product {
 	
 	public void setCharacteristics(List<Characteristic> characteristics) {
 		this.characteristics = characteristics;
+	}
+
+	public String getImgURL() {
+		return imgURL;
+	}
+
+	public void setImgURL(String imgURL) {
+		this.imgURL = imgURL;
 	}
 
 	@Override

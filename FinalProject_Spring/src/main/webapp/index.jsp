@@ -54,13 +54,15 @@
 				<td>Amount:</td>
 				<td>Characteristics:</td>
 			</tr>
-			<% for (Product p : products) {%>
+			<% for (Product p : products) {
+				request.setAttribute("filename", p.getImgURL());%>
 				<tr>
 					<td><%= p.getName() %></td>
 					<td><%= p.getDescription() %></td>
 					<td><%= p.getPrice() %></td>
 					<td><%= p.getAmmountInStock() %></td>
 					<td><%= p.getCharacteristics().get(0).getName()%> : <%=p.getCharacteristics().get(0).getValue()%></td>
+					<td><img src="download/${filename}" height="100" width="100"/></td>
 					<% if (user != null) {%>
 						<td>
 							<form action="addToCart" method="GET">
@@ -80,13 +82,15 @@
 		</table>
 		<% if (user != null) {%>
 		<table>
-			<% for (Product p : userFavouritesProducts) {%>
+			<% for (Product p : userFavouritesProducts) {
+				request.setAttribute("filename", p.getImgURL());%>
 				<tr>
 					<td><%= p.getName() %></td>
 					<td><%= p.getDescription() %></td>
 					<td><%= p.getPrice() %></td>
 					<td><%= p.getAmmountInStock() %></td>
 					<td><%= p.getCharacteristics().get(0).getName()%> : <%=p.getCharacteristics().get(0).getValue()%></td>
+					<td><img src="download/${filename}" height="100" width="100"/></td>
 					<td>
 						<form action="removeFavourite" method="POST">
 							<input type="hidden" name="fav_product" value="<%= p.getId()%>">

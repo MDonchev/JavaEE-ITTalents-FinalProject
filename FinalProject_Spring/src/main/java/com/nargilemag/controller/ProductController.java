@@ -1,15 +1,24 @@
 package com.nargilemag.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nargilemag.model.Category;
 import com.nargilemag.model.Characteristic;
@@ -21,8 +30,12 @@ import com.nargilemag.model.dao.ProductDao;
 import com.nargilemag.model.dao.UserDao;
 
 @Controller
+@MultipartConfig
 public class ProductController {
 
+	private static final String PRODUCT_IMG_FILE_PATH = "/home/mario/Документи/uploads-FP-ITT/"; 
+	
+	
 	@RequestMapping(value = "/addproduct", method = RequestMethod.GET)
 	public String addProductPage(HttpServletRequest request) {
 		try {
@@ -39,7 +52,7 @@ public class ProductController {
 		}
 	}
 	@RequestMapping(value = "/addproduct", method = RequestMethod.POST)
-	public String addProduct(HttpServletRequest request) {
+	public String addProduct(HttpServletRequest request,@RequestParam("fail") MultipartFile uploadedFile) {
 		try {
 			String name = request.getParameter("name");
 			String desc = request.getParameter("desc");
@@ -52,13 +65,12 @@ public class ProductController {
 			Integer character = Integer.parseInt(request.getParameter("characteristics"));
 			String ch_name = CharacteristicDao.INSTANCE.getCharacteristicNameByID(character);
 			characteristics.add(new Characteristic(character,ch_name, ch_value));
-//			System.out.println(name);
-//			System.out.println(desc);
-//			System.out.println(price);
-//			System.out.println(ammount);
-//			System.out.println(category);
-//			System.out.println(characteristics.size());
-			Product p = new Product(name, desc, price, ammount, category, characteristics);
+			
+			String fileName = uploadedFile.getOriginalFilename();
+			File serverFile = new File(PRODUCT_IMG_FILE_PATH + fileName);
+			Files.copy(uploadedFile.getInputStream(), serverFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+			Product p = new Product(name, desc, price, ammount, category, characteristics, fileName);
 			
 			ProductDao.INSTANCE.saveProduct(p);
 			
@@ -68,8 +80,22 @@ public class ProductController {
 		} catch (SQLException e) {
 			request.setAttribute("exception", e);
 			return "error";
+		} catch (IOException e) {
+			request.setAttribute("exception", e);
+			return "error";
 		}
 		
+	}
+	
+	@RequestMapping(value="/download/{filename:.+}", method=RequestMethod.GET)
+	public void downloadFile(HttpServletResponse resp, @PathVariable("filename") String fileName, HttpServletRequest request) {
+		System.out.println(fileName);
+		File serverFile = new File(PRODUCT_IMG_FILE_PATH + fileName);
+		try {
+			Files.copy(serverFile.toPath(), resp.getOutputStream());
+		} catch (IOException e) {
+			request.setAttribute("exception", e);
+		}
 	}
 	
 	@RequestMapping(value = "/updateProductAmount", method = RequestMethod.GET)
