@@ -25,14 +25,26 @@
 		<td> <c:out value="${item.key.description }"></c:out> </td>
 		<td> <c:out value="${item.key.price }"></c:out> </td>
 		<td> <c:out value="${item.value }"></c:out> </td>
+		<td>
+			
+			<form action = "${pageContext.request.contextPath}/order/decrease" method = "post">
+				<input type = hidden name = "productName" value = "${item.key.name  }">
+				<input type = "submit" value = "decrease">
+			</form>
+			 
+			
+		</td>
 		</tr>
 		</c:forEach>
 	</table>
 	
-	<form:form>
+	<c:if test = "${not empty cart}">
+	<form:form action = "${pageContext.request.contextPath}/order/finalize">
 		<input type="submit" value="Finalize Order">
 		
 	</form:form>
+	</c:if>
 
+	
 </body>
 </html>

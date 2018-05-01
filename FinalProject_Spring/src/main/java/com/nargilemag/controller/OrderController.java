@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -24,9 +26,10 @@ import com.nargilemag.util.exceptions.NotEnoughMoneyForOrderException;
 import com.nargilemag.util.exceptions.OrderedProductsAmmountException;
 
 @Controller
+@RequestMapping(value = "/order")
 public class OrderController {
 
-	@RequestMapping(value = "/order", method = RequestMethod.GET)
+	@RequestMapping(value = {"","decrease"}, method = RequestMethod.GET)
 	public String showProductsInCart(HttpServletRequest request) {
 		
 		Map<Product, Integer> cart = (Map<Product, Integer>) request.getSession().getAttribute("cart");
@@ -35,8 +38,37 @@ public class OrderController {
 		
 		return "order";
 	}
-
-	@RequestMapping(value = "/order", method = RequestMethod.POST)
+	
+//	@RequestMapping(value = "/decrease", method = RequestMethod.GET)
+//	public String 
+	
+	@RequestMapping(value = "decrease", method = RequestMethod.POST)
+	public String decreaseCount(HttpServletRequest request) {
+		Map<Product, Integer> cart = (Map<Product, Integer>) request.getSession().getAttribute("cart");
+		String productName = request.getParameter("productName");
+		
+		for(Product product : cart.keySet()) {
+			boolean broke = false;
+			if(product.getName().compareTo(productName) == 0) {
+				if(cart.get(product) > 0) {
+					cart.put(product, cart.get(product) - 1);
+					broke = true;
+				}
+			}
+			if(cart.get(product) == 0) {
+				cart.remove(product);
+				if(broke == true) {
+					break;
+				}
+			}
+		}
+		
+		request.getSession().setAttribute("cart", cart);
+		
+		return "/order";
+	}
+	
+	@RequestMapping(value = "/finalize", method = RequestMethod.POST)
 	public synchronized String finalizeOrder(HttpServletRequest request) {
 		
 		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) request.getSession().getAttribute("cart");
@@ -63,6 +95,7 @@ public class OrderController {
 				OrderDao.INSTANCE.addOrderFromUser(order, user);
 				OrderDao.INSTANCE.addProductToOrder(order, product);
 				ProductDao.INSTANCE.updateProductAmmountInStock(product.getId(), product.getAmmountInStock() - cart.get(product));
+				cart.remove(product);
 				
 			}
 			

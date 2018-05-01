@@ -15,7 +15,7 @@
 							Username
 						</td>
 						<td>
-							<input type="text" name="username" required>
+							<input type="text" name="username" value = "Boronatora" required>
 						</td>
 					</tr>
 					<tr>
@@ -23,7 +23,7 @@
 							Password
 						</td>
 						<td>
-							<input type="password" name="password" required>
+							<input type="password" name="password" value = "1234567Qq_" required>
 						</td>
 					</tr>
 					
