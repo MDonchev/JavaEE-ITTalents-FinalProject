@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `nargilemag` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `nargilemag`;
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.59, for debian-linux-gnu (x86_64)
 --
 -- Host: 127.0.0.1    Database: nargilemag
 -- ------------------------------------------------------
--- Server version	5.7.21-log
+-- Server version	5.5.59-0ubuntu0.14.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -222,10 +222,11 @@ CREATE TABLE `products` (
   `price` double unsigned NOT NULL,
   `ammount_in_stock` int(10) NOT NULL,
   `category_id` int(11) NOT NULL,
+  `img_url` varchar(350) NOT NULL,
   PRIMARY KEY (`id`,`category_id`),
   KEY `fk_product_category_idx` (`category_id`),
   CONSTRAINT `fk_product_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -234,7 +235,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (6,'Product1','Product1-Description1',123,1,4),(7,'Product2','Product2-Description1',312,3,8),(8,'Product3','Description3',432,10,9);
+INSERT INTO `products` VALUES (6,'Product1','Product1-Description1',123,1,4,'nargile1.jpg'),(7,'Product2','Product2-Description1',312,3,8,'tobacco1.jpg'),(8,'Product3','Description3',432,10,9,'tobacco1.jpg'),(9,'Product4','Description4',123,5,4,'nargile2.jpg'),(10,'Hookah','Hookah Arab',25,4,5,'nargile2.jpeg');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -263,7 +264,7 @@ CREATE TABLE `products_have_characteristics` (
 
 LOCK TABLES `products_have_characteristics` WRITE;
 /*!40000 ALTER TABLE `products_have_characteristics` DISABLE KEYS */;
-INSERT INTO `products_have_characteristics` VALUES (6,1,2),(7,2,250),(8,2,435);
+INSERT INTO `products_have_characteristics` VALUES (6,1,2),(7,2,250),(8,2,435),(9,1,2),(10,1,1);
 /*!40000 ALTER TABLE `products_have_characteristics` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -309,4 +310,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-30 13:13:52
+-- Dump completed on 2018-05-02  0:38:16
