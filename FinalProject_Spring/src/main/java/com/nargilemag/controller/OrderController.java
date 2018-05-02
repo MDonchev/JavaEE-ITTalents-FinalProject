@@ -38,9 +38,7 @@ public class OrderController {
 		
 		return "order";
 	}
-	
-//	@RequestMapping(value = "/decrease", method = RequestMethod.GET)
-//	public String 
+	 
 	
 	@RequestMapping(value = "decrease", method = RequestMethod.POST)
 	public String decreaseCount(HttpServletRequest request) {
@@ -81,7 +79,7 @@ public class OrderController {
 				if(product.getAmmountInStock() < cart.get(product)) {
 					throw new OrderedProductsAmmountException("Not enough in stock");
 				}
-				totalPrice += cart.get(product) * product.getPrice();
+				totalPrice += cart.get(product) * (product.getPrice() - product.getDiscountPercent() / 100 * product.getPrice()); //subtracting the discount amount
 			}
 			
 			if(user.getBalance() < totalPrice) {
@@ -98,6 +96,7 @@ public class OrderController {
 				cart.remove(product);
 				
 			}
+			
 			
 			UserDao.INSTANCE.updateBalanceById(user.getId(), user.getBalance() - totalPrice);
 			user.setBalance(user.getBalance() - totalPrice);

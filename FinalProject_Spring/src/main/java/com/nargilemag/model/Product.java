@@ -14,6 +14,7 @@ public class Product {
 	private double price;
 	private int ammountInStock;
 	private int categoryId;
+	private int discountPercent;
 	
 	private List<Characteristic> characteristics;
 	
@@ -22,12 +23,14 @@ public class Product {
 		this.characteristics = new ArrayList<>();
 	}
 	
-	public Product(int id, String name, String description, double price, int ammountInStock, int categoryId, List<Characteristic> characteristics, String url) {
-		this(name, description, price, ammountInStock, categoryId, characteristics,url);
+	public Product(int id, String name, String description, double price, int ammountInStock, int categoryId,
+					List<Characteristic> characteristics, String url, int discountPercent) {
+		this(name, description, price, ammountInStock, categoryId, characteristics,  url, discountPercent);
 		this.id = id;
 	}
 	
-	public Product(String name, String description, double price, int ammountInStock, int categoryId, List<Characteristic> characteristics, String url) {
+	public Product(String name, String description, double price, int ammountInStock, int categoryId,
+					List<Characteristic> characteristics, String url, int discountPercent) {
 		this.name = name;
 		this.description = description;
 		this.price = price;
@@ -35,6 +38,7 @@ public class Product {
 		this.categoryId = categoryId;
 		this.characteristics = characteristics;
 		this.imgURL = url;
+		this.discountPercent = discountPercent;
 	}
 
 
@@ -105,6 +109,15 @@ public class Product {
 		this.imgURL = imgURL;
 	}
 
+	public int getDiscountPercent() {
+		return discountPercent;
+	}
+	
+	public void setDiscountPercent(int discountPercent) {
+		this.discountPercent = discountPercent;
+	}
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

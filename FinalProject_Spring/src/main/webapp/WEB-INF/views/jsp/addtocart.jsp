@@ -30,6 +30,7 @@
 		<f:input type="hidden" path="description" value="${product.description }"/>
 		<f:input type="hidden" path="price" value="${product.price }"/>
 		<f:input type="hidden" path="ammountInStock" value="${product.ammountInStock }"/>
+		<f:input type="hidden" path="discountPercent" values="${product.discountPercent }"/>
 		
 	</f:form>
 	
