@@ -99,8 +99,6 @@ public class UserController {
 			UserDao.INSTANCE.saveUser(u);
 			request.getSession().setAttribute("user", u);
 			request.getSession().setAttribute("cart", new HashMap<Product,Integer>());
-			//TODO
-			//getServletConfig().getServletContext().setAttribute("products", ProductDao.getInstance().getAll());
 			
 			//forward to login OR main
 			return "redirect:/";
@@ -134,16 +132,16 @@ public class UserController {
 	}
 	
 	@RequestMapping(value= "/addToCart", method = RequestMethod.POST)
-	public String addToCart(@ModelAttribute Product product, HttpServletRequest request) {
+	public String addToCart(@ModelAttribute Product product, HttpServletRequest request, HttpSession session) {
 		Integer ammount = Integer.parseInt((String)request.getParameter("ammount"));
-		HashMap<Product, Integer> cart = (HashMap<Product, Integer>)request.getSession().getAttribute("cart");
+		HashMap<Product, Integer> cart = (HashMap<Product, Integer>)session.getAttribute("cart");
 		
 		if(!cart.containsKey(product)) {
 			cart.put(product, 0);
 		}
 		cart.put(product, cart.get(product) + ammount);
 		
-		request.getSession().setAttribute("cart", cart);
+		session.setAttribute("cart", cart);
 		return "redirect:/";
 	}
 	

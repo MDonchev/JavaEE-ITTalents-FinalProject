@@ -73,14 +73,9 @@ public class ProductController {
 			Product p = new Product(name, desc, price, ammount, category, characteristics, fileName);
 			
 			ProductDao.INSTANCE.saveProduct(p);
-			
-			
-			
+				
 			return "redirect:/";
-		} catch (SQLException e) {
-			request.setAttribute("exception", e);
-			return "error";
-		} catch (IOException e) {
+		} catch (SQLException | IOException e) {
 			request.setAttribute("exception", e);
 			return "error";
 		}
