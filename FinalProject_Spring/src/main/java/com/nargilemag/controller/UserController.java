@@ -33,20 +33,6 @@ public class UserController {
 		return "login";
 	}
 	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String indexPage(Model m){
-		/*
-		 <% List<Product> products = ProductDao.INSTANCE.getAllProducts();%>
-		<% List<Product> userFavouritesProducts = new ArrayList<Product>();
-			if (user != null){
-				userFavouritesProducts = ProductDao.INSTANCE.getUserFavourites(user);
-			}
-			%>
-		 */
-		return "index";
-	
-	}
-	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password,
 			HttpServletRequest request) throws SQLException {

@@ -8,8 +8,7 @@
 	</head>
 	<body>
 		<h1>Error!</h1>
-		<% Exception e = (Exception) request.getAttribute("exception"); %>
-		<h2>Reason: <%= e.getMessage() %></h2>
-		<a href="index.jsp">Back to login, sorry about that</a>
+		<h2>Reason: ${exception.message }</h2>
+		<a href="index">Back to login, sorry about that</a>
 	</body>
 </html>

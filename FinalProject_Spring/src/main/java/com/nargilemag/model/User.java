@@ -17,7 +17,7 @@ public class User {
 	private String phoneNumber;
 	private double balance;
 	private int gender_id;
-	private boolean isAdmin;
+	private boolean admin;
 	
 	private List<Integer> favoriteProducts;
 	
@@ -29,9 +29,9 @@ public class User {
 		this.email = email;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
-		this.balance = balance;//TODO: DB!!!
+		this.balance = balance;
 		this.gender_id = gender;
-		this.isAdmin = isAdmin;
+		this.admin = isAdmin;
 	}
 
 	public User(int id, String username, String password, String email, String address, String phoneNumber, double balance, int gender, boolean isAdmin){
@@ -68,10 +68,6 @@ public class User {
 		return gender_id;
 	}
 
-	public boolean isAdmin() {
-		return isAdmin;
-	}
-	
 	public int getId() {
 		return id;
 	}
@@ -80,6 +76,14 @@ public class User {
 		this.id = id;
 	}
 	
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+
 	public Collection<Integer> getFavorites(){
 		return Collections.unmodifiableList(this.favoriteProducts);
 	}
