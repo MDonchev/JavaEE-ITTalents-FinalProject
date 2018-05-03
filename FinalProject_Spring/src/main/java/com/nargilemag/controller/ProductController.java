@@ -122,6 +122,9 @@ public class ProductController {
 			Integer ammount = Integer.parseInt(request.getParameter("ammount"));
 			
 			ProductDao.INSTANCE.updateProductAmmountInStock(product.getId(), product.getAmmountInStock() + ammount);
+			List<String> usersFavEmails = ProductDao.INSTANCE.getAllEmailsOfUsersWithFavoriteProductId(product.getId());
+			
+			MailSender.askUsersToRatePlaceAfterVisit(usersFavEmails);
 			
 			return "redirect:/";
 		} catch (SQLException e) {

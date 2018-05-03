@@ -49,11 +49,7 @@ public class UserController {
 				throw new UserDataException("invalid username or password");
 			}
 		}
-		catch (UserDataException e) {
-			request.setAttribute("exception", e);
-			return "error";
-		}
-		catch (SQLException e) {
+		catch (UserDataException | SQLException e) {
 			request.setAttribute("exception", e);
 			return "error";
 		}
@@ -79,7 +75,7 @@ public class UserController {
 		
 	}
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String registerUSer(HttpServletRequest request) {
+	public String registerUSer(HttpServletRequest request, HttpSession session) {
 		try {
 
 			String username = request.getParameter("username");
@@ -97,17 +93,14 @@ public class UserController {
 			User u = new User(username, password1, email, address, phoneNumber, 500, gender, false); //TODO: everyone starts with 500 cash by default
 			//save user in data base and current session
 			UserDao.INSTANCE.saveUser(u);
-			request.getSession().setAttribute("user", u);
-			request.getSession().setAttribute("cart", new HashMap<Product,Integer>());
+			
+			session.setAttribute("user", u);
+			session.setAttribute("cart", new HashMap<Product,Integer>());
 			
 			//forward to login OR main
 			return "redirect:/";
 		}
-		catch (UserDataException e) {
-			request.setAttribute("exception", e);
-			return "error";
-		}
-		catch (Exception e) {
+		catch (UserDataException | SQLException e) {
 			request.setAttribute("exception", e);
 			return "error";
 		}

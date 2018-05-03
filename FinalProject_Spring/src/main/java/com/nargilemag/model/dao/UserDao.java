@@ -29,7 +29,7 @@ public enum UserDao implements IUserDao{
 	}
 	
 	public synchronized void saveUser(User u) throws SQLException {
-		String sql = "INSERT INTO users (username,password,email,address,phone_number,is_admin,gender_id) VALUES (?,?,?,?,?,?,?);";
+		String sql = "INSERT INTO users (username,password,email,address,phone_number,is_admin,gender_id,balance) VALUES (?,?,?,?,?,?,?,?);";
 		
 		try(PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);){
 			
@@ -42,10 +42,14 @@ public enum UserDao implements IUserDao{
 			ps.setString(5, u.getPhoneNumber());
 			ps.setBoolean(6, u.isAdmin());
 			ps.setInt(7, u.getGender());
+			ps.setDouble(8, u.getBalance());
 			
 			ps.executeUpdate();
 			
-			u.setId(ps.getGeneratedKeys().getInt(1));
+			ResultSet rs = ps.getGeneratedKeys();
+			rs.next();
+			
+			u.setId(rs.getInt(1));
 		}
 	}
 	
