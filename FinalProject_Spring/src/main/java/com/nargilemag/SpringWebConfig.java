@@ -77,9 +77,9 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
 		//Set gmail email id
-		mailSender.setUsername("ittalents.airbnb@gmail.com");
+		mailSender.setUsername("ittalents.nargilemag@gmail.com");
 		//Set gmail email password
-		mailSender.setPassword("Pa$$word123");
+		mailSender.setPassword("marcoreus11");
 		Properties prop = mailSender.getJavaMailProperties();
 		prop.put("mail.transport.protocol", "smtp");
 		prop.put("mail.smtp.auth", "true");

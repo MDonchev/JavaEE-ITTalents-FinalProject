@@ -16,7 +16,7 @@ public class MailSender {
 	@Autowired
 	private static JavaMailSenderImpl mailSender;
 	
-	public static void askUsersToRatePlaceAfterVisit(List<String> emails) {
+	public static void sendEmail(List<String> emails) {
 		
 		for (String email : emails) {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();

@@ -124,7 +124,7 @@ public class ProductController {
 			ProductDao.INSTANCE.updateProductAmmountInStock(product.getId(), product.getAmmountInStock() + ammount);
 			List<String> usersFavEmails = ProductDao.INSTANCE.getAllEmailsOfUsersWithFavoriteProductId(product.getId());
 			
-			MailSender.askUsersToRatePlaceAfterVisit(usersFavEmails);
+			MailSender.sendEmail(usersFavEmails);
 			
 			return "redirect:/";
 		} catch (SQLException e) {
