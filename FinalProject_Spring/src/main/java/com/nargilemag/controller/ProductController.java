@@ -70,6 +70,7 @@ public class ProductController {
 			File serverFile = new File(PRODUCT_IMG_FILE_PATH + fileName);
 			Files.copy(uploadedFile.getInputStream(), serverFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
+			
 			Product p = new Product(name, desc, price, ammount, category, characteristics, fileName, 0); //initial discount percent is always 0
 			
 			ProductDao.INSTANCE.saveProduct(p);

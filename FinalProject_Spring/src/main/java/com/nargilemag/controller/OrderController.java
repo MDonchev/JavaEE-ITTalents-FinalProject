@@ -40,7 +40,7 @@ public class OrderController {
 	}
 	 
 	
-	@RequestMapping(value = "decrease", method = RequestMethod.POST)
+	@RequestMapping(value = "/decrease", method = RequestMethod.POST)
 	public String decreaseCount(HttpServletRequest request) {
 		Map<Product, Integer> cart = (Map<Product, Integer>) request.getSession().getAttribute("cart");
 		String productName = request.getParameter("productName");
