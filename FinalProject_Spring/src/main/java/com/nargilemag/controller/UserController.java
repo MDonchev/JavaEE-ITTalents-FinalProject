@@ -35,14 +35,14 @@ public class UserController {
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password,
-			HttpServletRequest request) throws SQLException {
+			HttpServletRequest request, HttpSession session) throws SQLException {
 		try {
 			
 			User u = UserDao.INSTANCE.getUserFromLogin(username, password);
 			
 			if(u != null) {
-				request.getSession().setAttribute("user", u);
-				request.getSession().setAttribute("cart", new HashMap<Product,Integer>());
+				session.setAttribute("user", u);
+				session.setAttribute("cart", new HashMap<Product,Integer>());
 				return "redirect:/";
 			}
 			else {
@@ -55,8 +55,7 @@ public class UserController {
 		}
 	}
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
-	public String userLogout(HttpServletRequest request){
-		HttpSession session = request.getSession();
+	public String userLogout(HttpSession session){
 		session.invalidate();
 		return "redirect:/";
 	}
@@ -70,6 +69,7 @@ public class UserController {
 			//forward this request to register.jsp
 			return "register";
 		} catch (SQLException e) {
+			
 			return "error";
 		}
 		

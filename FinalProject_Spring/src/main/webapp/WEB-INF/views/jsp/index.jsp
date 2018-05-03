@@ -15,7 +15,7 @@
 </head>
 <body>
 	
-	<center>
+	<div style = "text-align: center">
 		<h1>Welcome to Nargilemag.bg</h1>
 		<c:choose>
 			<c:when test="${not empty loggedUser}">
@@ -37,6 +37,9 @@
 						<input type='submit' value='Update Products Amount' />
 					</f:form>
 				</c:if>
+				<f:form action = "sorted" method = "get">
+					<input style = "text-align: left" type = "submit" value = "Sort By Price" />
+				</f:form>
 			</c:when>
 			<c:otherwise>
 				<f:form action="login" method="GET">
@@ -47,8 +50,8 @@
 				</f:form>
 			</c:otherwise>
 		</c:choose>
-
-		<table>
+		
+		<table align = "center">
 			<tr>
 				<td>Name:</td>
 				<td>Description:</td>
@@ -115,6 +118,6 @@
 			
 			<a href="order"> Show Cart</a>
 		</c:if>
-	</center>
+	</div>
 </body>
 </html>
