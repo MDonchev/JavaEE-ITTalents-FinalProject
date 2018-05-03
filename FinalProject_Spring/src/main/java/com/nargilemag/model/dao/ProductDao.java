@@ -1,5 +1,6 @@
 package com.nargilemag.model.dao;
 
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,8 +15,6 @@ import com.nargilemag.model.User;
 
 
 public enum ProductDao {
-
-	//TODO: adding and romving products form DB should be synchronized actions
 	
 	INSTANCE;
 	
@@ -195,6 +194,49 @@ public enum ProductDao {
 
 	}
 	
+	public ArrayList<Product> getProductsWithNameLike(String str) throws SQLException{
+		String sql = "SELECT id, name, description, price, ammount_in_stock, category_id, img_url, discount_percent "
+				+ "FROM products "
+				+ "WHERE name LIKE " + "\""+"%" +"?" + "%" + "\"";
+		
+		ArrayList<Product> result = new ArrayList<>();
+		
+		try(Statement st = connection.createStatement();){
+			ResultSet rs = st.executeQuery(sql);
+			while (rs.next()) {
+				result.add(new Product(
+							rs.getInt("id"),
+							rs.getString("name"),
+							rs.getString("description"),
+							rs.getDouble("price"),
+							rs.getInt("ammount_in_stock"),
+							rs.getInt("category_id"),
+							CharacteristicDao.INSTANCE.getCharacteristicsByProductId(rs.getInt("id")),
+							rs.getString("img_url"),
+							rs.getInt("discount_percent")
+						));
+			}
+		}
+		
+		return result;
+	}
+	
+	public List<String> getAllEmailsOfUsersWithFavoriteProductId(int id) throws SQLException{
+		String sql = "SELECT email FROM users JOIN favorite_products f ON id = f.users_id WHERE f.products_id = ?";
+		ArrayList<String> emails = new ArrayList<>();
+		
+		try(PreparedStatement ps = connection.prepareStatement(sql);){
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				emails.add(rs.getString("email"));
+			}
+		}
+		
+		return emails;
+	}
+	
 	public List<Product> getUserFavourites(User u) throws SQLException {
 
 		String sql = "SELECT p.id, name, description, price, ammount_in_stock, category_id, img_url, discount_percent FROM favorite_products AS fp JOIN products AS p ON fp.product_id = p.id WHERE fp.users_id = ?";
@@ -220,12 +262,5 @@ public enum ProductDao {
 		}
 		return products;
 	}
-/*
-	public void decreaseQuantity(int productId) throws SQLException {
-		String sql = "UPDATE products SET quantity = quantity - 1 WHERE id = ?";
-		PreparedStatement ps = con.prepareStatement(sql);
-		ps.setInt(1, productId);
-		ps.executeUpdate();
-	}
-*/
+
 }
