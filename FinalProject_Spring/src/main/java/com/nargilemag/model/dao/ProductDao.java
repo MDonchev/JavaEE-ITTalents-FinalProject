@@ -222,7 +222,7 @@ public enum ProductDao {
 	}
 	
 	public List<String> getAllEmailsOfUsersWithFavoriteProductId(int id) throws SQLException{
-		String sql = "SELECT email FROM users JOIN favorite_products f ON id = f.users_id WHERE f.products_id = ?";
+		String sql = "SELECT email FROM users JOIN favorite_products f ON id = f.users_id WHERE f.product_id = ?";
 		ArrayList<String> emails = new ArrayList<>();
 		
 		try(PreparedStatement ps = connection.prepareStatement(sql);){
