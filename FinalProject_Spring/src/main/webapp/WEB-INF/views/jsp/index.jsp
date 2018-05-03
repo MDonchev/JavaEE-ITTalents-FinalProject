@@ -21,6 +21,11 @@
 			<c:when test="${not empty loggedUser}">
 				<h1>Welcome, <c:out value="${loggedUser.username}"></c:out></h1>
 				<h3 style="color:green; text-align: right"><c:out value="${loggedUser.balance}"/>$</h3>
+				<f:form action = "search" method = "post">
+					<input type = "text" name = "name"/>
+					<input type = "submit" value = "search"/>
+				</f:form>
+
 				<form action="logout" method="post">
 					<input type='submit' value='Logout' />
 				</form>
