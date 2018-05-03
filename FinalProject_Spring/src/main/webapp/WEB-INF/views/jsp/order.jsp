@@ -39,7 +39,7 @@
 	</table>
 	
 	<c:if test = "${not empty cart}">
-	<form:form action = "order/finalize">
+	<form:form action = "/MyProject/order/finalize">
 		<input type="submit" value="Finalize Order">
 		
 	</form:form>
