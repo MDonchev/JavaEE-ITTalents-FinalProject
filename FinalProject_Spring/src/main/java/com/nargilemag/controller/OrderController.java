@@ -93,15 +93,13 @@ public class OrderController {
 				OrderDao.INSTANCE.addOrderFromUser(order, user);
 				OrderDao.INSTANCE.addProductToOrder(order, product);
 				ProductDao.INSTANCE.updateProductAmmountInStock(product.getId(), product.getAmmountInStock() - cart.get(product));
-				cart.remove(product);
 				
 			}
-			
 			
 			UserDao.INSTANCE.updateBalanceById(user.getId(), user.getBalance() - totalPrice);
 			user.setBalance(user.getBalance() - totalPrice);
 			
-			
+			request.getSession().setAttribute("cart", new HashMap<>());
 			
 		}
 		catch (OrderedProductsAmmountException e) {
