@@ -3,6 +3,7 @@ package com.nargilemag.controller;
 import static org.mockito.Mockito.doThrow;
 
 import java.sql.SQLException;
+import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.nargilemag.model.Order;
 import com.nargilemag.model.Product;
 import com.nargilemag.model.User;
+import com.nargilemag.model.dao.DBManager;
 import com.nargilemag.model.dao.OrderDao;
 import com.nargilemag.model.dao.ProductDao;
 import com.nargilemag.model.dao.UserDao;
@@ -74,7 +76,10 @@ public class OrderController {
 		
 		User user = (User) request.getSession().getAttribute("user");
 		
+		Connection connection = DBManager.INSTANCE.getConnection();
+		
 		try {
+			
 			for(Product product : cart.keySet()) {
 				if(product.getAmmountInStock() < cart.get(product)) {
 					throw new OrderedProductsAmmountException("Not enough in stock");
@@ -87,31 +92,35 @@ public class OrderController {
 			}
 			
 			
-			Order order = new Order(LocalDate.now(), user.getAddress(), user.getPhoneNumber(), user.getId(), cart);
-			for(Product product : cart.keySet()) {
+			try {
+				connection.setAutoCommit(false);
+				Order order = new Order(LocalDate.now(), user.getAddress(), user.getPhoneNumber(), user.getId(), cart);
+				for(Product product : cart.keySet()) {
+					OrderDao.INSTANCE.addOrderFromUser(order, user);
+					OrderDao.INSTANCE.addProductToOrder(order, product);
+					ProductDao.INSTANCE.updateProductAmmountInStock(product.getId(), product.getAmmountInStock() - cart.get(product));
+					
+				}
 				
-				OrderDao.INSTANCE.addOrderFromUser(order, user);
-				OrderDao.INSTANCE.addProductToOrder(order, product);
-				ProductDao.INSTANCE.updateProductAmmountInStock(product.getId(), product.getAmmountInStock() - cart.get(product));
+				UserDao.INSTANCE.updateBalanceById(user.getId(), user.getBalance() - totalPrice);
+				user.setBalance(user.getBalance() - totalPrice);
 				
+				request.getSession().setAttribute("cart", new HashMap<>());
+				connection.commit();
+			}
+			catch (SQLException e) {
+				connection.rollback();
+				throw new SQLException("order transaction failed");
+			}
+			finally {
+				connection.setAutoCommit(true);
 			}
 			
-			UserDao.INSTANCE.updateBalanceById(user.getId(), user.getBalance() - totalPrice);
-			user.setBalance(user.getBalance() - totalPrice);
-			
-			request.getSession().setAttribute("cart", new HashMap<>());
 			
 		}
-		catch (OrderedProductsAmmountException e) {
+		catch (OrderedProductsAmmountException | NotEnoughMoneyForOrderException | SQLException e) {
 			request.setAttribute("exception", e);
-			return "error";
-		}
-		catch (NotEnoughMoneyForOrderException e) {
-			request.setAttribute("exception", e);
-			return "error";
-		}
-		catch (SQLException e) {
-			request.setAttribute("exception", e);
+			e.printStackTrace();
 			return "error";
 		}
 		
