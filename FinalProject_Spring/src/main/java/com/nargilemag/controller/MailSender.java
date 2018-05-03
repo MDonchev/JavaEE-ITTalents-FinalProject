@@ -1,22 +1,22 @@
 package com.nargilemag.controller;
 
 import java.util.List;
+import java.util.Properties;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Controller;
 
-@Controller
-public class MailSender {
 
-	@Autowired
-	private static JavaMailSenderImpl mailSender;
+
+public enum MailSender {
 	
-	public static void sendEmail(List<String> emails) {
+	INSTANCE;
+	
+	
+	public void sendEmail(JavaMailSenderImpl mailSender, List<String> emails, String mess) {
 		
 		for (String email : emails) {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -25,12 +25,12 @@ public class MailSender {
 				MimeMessageHelper mailMsg = new MimeMessageHelper(mimeMessage, true);
 				mailMsg.setFrom("ittalents.nargilemag@gmail.com");
 				mailMsg.setTo(email);
-				mailMsg.setSubject("Test mail");
-				mailMsg.setText("Your favourite product has been changed", true);
+				mailMsg.setSubject("Information mail");
+				mailMsg.setText(mess, true);
 				mailSender.send(mimeMessage);
 			} catch (MessagingException e) {
 				e.printStackTrace();
 			}
 		}
-	}
+}
 }

@@ -8,10 +8,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +37,10 @@ import com.nargilemag.model.dao.UserDao;
 @Controller
 @MultipartConfig
 public class ProductController {
-
+	
+	@Autowired
+	private JavaMailSenderImpl mailSender;
+	
 	private static final String PRODUCT_IMG_FILE_PATH = "/home/mario/Документи/uploads-FP-ITT/"; 
 	
 	
@@ -124,7 +132,7 @@ public class ProductController {
 			ProductDao.INSTANCE.updateProductAmmountInStock(product.getId(), product.getAmmountInStock() + ammount);
 			List<String> usersFavEmails = ProductDao.INSTANCE.getAllEmailsOfUsersWithFavoriteProductId(product.getId());
 			
-			MailSender.sendEmail(usersFavEmails);
+			MailSender.INSTANCE.sendEmail(mailSender,usersFavEmails,"Your favourite product: "+ product.getName() +" has been updated");
 			
 			return "redirect:/";
 		} catch (SQLException e) {
@@ -133,4 +141,5 @@ public class ProductController {
 		}
 		
 	}
+	
 }
