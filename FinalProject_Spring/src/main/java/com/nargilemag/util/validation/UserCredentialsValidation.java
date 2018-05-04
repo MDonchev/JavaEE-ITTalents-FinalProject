@@ -1,19 +1,21 @@
 package com.nargilemag.util.validation;
 
+import com.nargilemag.util.exceptions.UserDataException;
+
 public final class UserCredentialsValidation {
 
-	public static final boolean stringValidation(String str) {
+	private static final boolean stringValidation(String str) {
 		return str != null && !str.trim().isEmpty();
 	}
 	
-	public static final boolean mailValidation(String email) {
+	private static final boolean mailValidation(String email) {
 		return stringValidation(email) && email.matches("[\\w|.|-]*@\\w*\\.[\\w|.]+");
 	}
 	
-	public static final boolean usernameValidation(String name) {
+	private static final boolean usernameValidation(String name) {
 		return stringValidation(name) && checkName(name);
 	}
-	public static final boolean passwordValidation(String password) {
+	private static final boolean passwordValidation(String password) {
 		//password:
 		//at least 1 digit
 		//at least 1 lower case char
@@ -24,7 +26,7 @@ public final class UserCredentialsValidation {
 		return stringValidation(password) && password.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=-_])(?=\\S+$).{7,}$");
 	}
 	
-	public static final boolean numberValidation(String number) {
+	private static final boolean numberValidation(String number) {
 		//number starts with 08 and have 10 symbols , only digits
 		return stringValidation(number) && number.matches("08[0-9]{8}");
 	}
@@ -40,5 +42,31 @@ public final class UserCredentialsValidation {
 			}
 		}
 		return true;
+	}
+	
+	public static void validateData (String name, String password1 ,String password2 ,String email, String address, String phoneNumber) throws UserDataException{
+		if (!password1.equals(password2)) {
+			throw new UserDataException("Password mismatch.");
+		}
+		if (!UserCredentialsValidation.usernameValidation(name)) {
+			String errMessage = "Username must starts with letter and contains only letters or digits.";
+			throw new UserDataException(errMessage);
+		}
+		if (!UserCredentialsValidation.passwordValidation(password1)) {
+			String errMessage = "Password must be at least 7 symbols and contains at least: 1 small letter, 1 big letter, 1 digit, 1 special symbol and must be without whitespaces";
+			throw new UserDataException(errMessage);
+		}
+		if(!UserCredentialsValidation.mailValidation(email)) {
+			String errMessage = "Email must be valid.";
+			throw new UserDataException(errMessage);
+		}
+		if(!UserCredentialsValidation.stringValidation(address)) {
+			String errMessage = "Address must be valid.";
+			throw new UserDataException(errMessage);
+		}
+		if(!UserCredentialsValidation.numberValidation(phoneNumber)) {
+			String errMessage = "Phone number must be 10 digits and starts with 08";
+			throw new UserDataException(errMessage);
+		}
 	}
 }

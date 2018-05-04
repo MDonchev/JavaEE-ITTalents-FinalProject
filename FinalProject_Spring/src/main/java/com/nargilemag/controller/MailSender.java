@@ -1,7 +1,6 @@
 package com.nargilemag.controller;
 
 import java.util.List;
-import java.util.Properties;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

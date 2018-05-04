@@ -27,7 +27,7 @@
 		<td> <c:out value="${item.value }"></c:out> </td>
 		<td>
 			
-			<form action = "/MyProject/order/decrease" method = "post">
+			<form action = "/nargilemag/order/decrease" method = "post">
 				<input type = hidden name = "productName" value = "${item.key.name  }">
 				<input type = "submit" value = "decrease">
 			</form>
@@ -39,7 +39,7 @@
 	</table>
 	
 	<c:if test = "${not empty cart}">
-	<form:form action = "/MyProject/order/finalize">
+	<form:form action = "/nargilemag/order/finalize">
 		<input type="submit" value="Finalize Order">
 		
 	</form:form>

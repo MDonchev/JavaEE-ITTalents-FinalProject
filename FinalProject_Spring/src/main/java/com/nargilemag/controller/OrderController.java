@@ -55,7 +55,7 @@ public class OrderController {
 					broke = true;
 				}
 			}
-			if(cart.get(product) == 0) {
+			if(cart.get(product) <= 0) {
 				cart.remove(product);
 				if(broke == true) {
 					break;

@@ -14,10 +14,12 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,8 @@ import com.nargilemag.model.dao.CategoryDao;
 import com.nargilemag.model.dao.CharacteristicDao;
 import com.nargilemag.model.dao.ProductDao;
 import com.nargilemag.model.dao.UserDao;
+import com.nargilemag.util.exceptions.ProductDataException;
+import com.nargilemag.util.validation.ProductCredentialValidation;
 
 @Controller
 @MultipartConfig
@@ -56,36 +60,48 @@ public class ProductController {
 			//forward this request to register.jsp
 			return "addproduct";
 		} catch (SQLException e) {
+			e.printStackTrace();
+			request.setAttribute("exception", e);
 			return "error";
 		}
 	}
 	@RequestMapping(value = "/addproduct", method = RequestMethod.POST)
-	public String addProduct(HttpServletRequest request,@RequestParam("fail") MultipartFile uploadedFile) {
+	public String addProduct(HttpServletRequest request, @RequestParam("name") String name,
+							@RequestParam("desc") String desc,
+							@RequestParam("price") String price,
+							@RequestParam("ammount") String ammount,
+							@RequestParam("category") String category,
+							@RequestParam("characteristics") String character,
+							@RequestParam("ch_ammo") String ch_value,
+							@RequestParam("fail") MultipartFile uploadedFile) {
 		try {
-			String name = request.getParameter("name");
-			String desc = request.getParameter("desc");
-			Double price = Double.parseDouble(request.getParameter("price"));
-			Integer ammount = Integer.parseInt(request.getParameter("ammount"));
-			Integer category = Integer.parseInt(request.getParameter("category"));
-			Integer ch_value = Integer.parseInt(request.getParameter("ch_ammo"));
+			String extension = FilenameUtils.getExtension(uploadedFile.getOriginalFilename());
+			ProductCredentialValidation.checkCredentials(name,desc,price,ammount,category,character,ch_value,extension);
+			
+			Double price1 = Double.parseDouble(price);
+			Integer ammount1 = Integer.parseInt(ammount);
+			Integer category1 = Integer.parseInt(category);
+			Integer ch_value1 = Integer.parseInt(ch_value);
 			
 			List<Characteristic> characteristics = new ArrayList<>();
-			Integer character = Integer.parseInt(request.getParameter("characteristics"));
-			String ch_name = CharacteristicDao.INSTANCE.getCharacteristicNameByID(character);
-			characteristics.add(new Characteristic(character,ch_name, ch_value));
+			Integer character1 = Integer.parseInt(character);
+			String ch_name = CharacteristicDao.INSTANCE.getCharacteristicNameByID(character1);
+			Integer ch_category = CharacteristicDao.INSTANCE.getCharacteristicCategory(character1);
+			characteristics.add(new Characteristic(character1,ch_name, ch_value1,ch_category));
 			
 			String fileName = uploadedFile.getOriginalFilename();
 			File serverFile = new File(PRODUCT_IMG_FILE_PATH + fileName);
 			Files.copy(uploadedFile.getInputStream(), serverFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 			
-			Product p = new Product(name, desc, price, ammount, category, characteristics, fileName, 0); //initial discount percent is always 0
+			Product p = new Product(name, desc, price1, ammount1, category1, characteristics, fileName, 0); //initial discount percent is always 0
 			
 			ProductDao.INSTANCE.saveProduct(p);
 				
 			return "redirect:/";
-		} catch (SQLException | IOException e) {
+		} catch (SQLException | IOException | ProductDataException e) {
 			request.setAttribute("exception", e);
+			e.printStackTrace();
 			return "error";
 		}
 		
@@ -93,7 +109,6 @@ public class ProductController {
 	
 	@RequestMapping(value="/download/{filename:.+}", method=RequestMethod.GET)
 	public void downloadFile(HttpServletResponse resp, @PathVariable("filename") String fileName, HttpServletRequest request) {
-		System.out.println(fileName);
 		File serverFile = new File(PRODUCT_IMG_FILE_PATH + fileName);
 		try {
 			Files.copy(serverFile.toPath(), resp.getOutputStream());
@@ -103,8 +118,15 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value = "/updateProductAmount", method = RequestMethod.GET)
-	public String updateProductsPage(HttpServletRequest request) {
-		return "updateProduct";
+	public String updateProductsPage(HttpServletRequest request, Model m) {
+		try {
+			List<Product> products = ProductDao.INSTANCE.getAllProducts();
+			m.addAttribute("products", products);
+			return "updateProduct";
+		} catch (SQLException e) {
+			request.setAttribute("exception", e);
+			return "error";
+		}
 	}
 	@RequestMapping(value = "/updateProduct", method = RequestMethod.GET)
 	public String updateProductPage(HttpServletRequest request) {
@@ -127,7 +149,11 @@ public class ProductController {
 	public String updateProduct(@ModelAttribute Product product, HttpServletRequest request) {
 		try {
 			//update product with dao
-			Integer ammount = Integer.parseInt(request.getParameter("ammount"));
+			String number = request.getParameter("ammount");
+			
+			ProductCredentialValidation.numberValidation(number);
+			
+			Integer ammount = Integer.parseInt(number);
 			
 			ProductDao.INSTANCE.updateProductAmmountInStock(product.getId(), product.getAmmountInStock() + ammount);
 			List<String> usersFavEmails = ProductDao.INSTANCE.getAllEmailsOfUsersWithFavoriteProductId(product.getId());
@@ -135,7 +161,7 @@ public class ProductController {
 			MailSender.INSTANCE.sendEmail(mailSender,usersFavEmails,"Your favourite product: "+ product.getName() +" has been updated");
 			
 			return "redirect:/";
-		} catch (SQLException e) {
+		} catch (ProductDataException | SQLException e) {
 			request.setAttribute("exception", e);
 			return "error";
 		}

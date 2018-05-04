@@ -36,6 +36,14 @@
 					<f:form action="updateProductAmount" method="get">
 						<input type='submit' value='Update Products Amount' />
 					</f:form>
+					
+					
+					<f:form action="discount" method="get">
+						<input type='submit' value='Discount Products' />
+					</f:form>
+					
+					
+					
 				</c:if>
 				<f:form action = "sorted" method = "get">
 					<input style = "text-align: left" type = "submit" value = "Sort By Price" />

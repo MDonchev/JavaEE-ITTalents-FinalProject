@@ -26,7 +26,7 @@ public enum CharacteristicDao {
 	public List<Characteristic> getCharacteristicsByProductId(int productId) throws SQLException {
 		ArrayList<Characteristic> characteristics = new ArrayList();
 		
-		String sql = "SELECT name, unit, value FROM products_have_characteristics p"
+		String sql = "SELECT name, unit, value, categories_id FROM products_have_characteristics p"
 				+ " JOIN characteristics c ON p.characteristics_id = c.id"
 				+ " WHERE p.products_id = ?";
 		
@@ -39,7 +39,8 @@ public enum CharacteristicDao {
 						new Characteristic(
 								rs.getString("name"),
 								rs.getString("unit"),
-								rs.getInt("value")));
+								rs.getInt("value"),
+								rs.getInt("categories_id")));
 			}
 			
 		}
@@ -47,12 +48,12 @@ public enum CharacteristicDao {
 		return characteristics;
 	}
 	public List<Characteristic> getAllCharacteristics() throws SQLException{
-		String sql = "SELECT id, name FROM characteristics;";
+		String sql = "SELECT id, name, categories_id FROM characteristics;";
 		Statement s = connection.createStatement();
 		ResultSet result = s.executeQuery(sql);
 		List<Characteristic> character = new ArrayList<>();
 		while(result.next()) {
-			character.add(new Characteristic(result.getInt("id"),result.getString("name"),null,0));
+			character.add(new Characteristic(result.getInt("id"),result.getString("name"),null,0,result.getInt("categories_id")));
 		}
 		
 		return character;
@@ -68,6 +69,21 @@ public enum CharacteristicDao {
 			ResultSet result = ps.executeQuery();
 			if (result.next()) {
 				return result.getString("name");
+			}
+			return null;
+		}
+	}
+
+
+	public Integer getCharacteristicCategory(int id) throws SQLException {
+		String sql = "SELECT categories_id FROM characteristics WHERE id = ?";
+		
+		try(PreparedStatement ps = connection.prepareStatement(sql)){
+			ps.setInt(1, id);
+			
+			ResultSet result = ps.executeQuery();
+			if (result.next()) {
+				return result.getInt("categories_id");
 			}
 			return null;
 		}

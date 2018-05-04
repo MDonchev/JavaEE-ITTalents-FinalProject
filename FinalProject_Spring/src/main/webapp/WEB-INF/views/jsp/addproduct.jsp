@@ -3,6 +3,8 @@
 <%@ page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -59,12 +61,9 @@
 						</td>
 						<td>
 							<select style="width: 132px" name="category" required>
-								<% 
-								List<Category> categories = (List<Category>) request.getAttribute("categories");
-								for(Category c : categories){ 
-								%>
-									<option value="<%= c.getId()%>"><%= c.getName()%></option>
-								<%} %>
+								<c:forEach items="${categories }" var= "cat">
+									<option value="${cat.id }" id="${cat.parent }"><c:out value="${cat.name }"></c:out></option>
+								</c:forEach>
 							</select>
 						</td>
 					</tr>
@@ -74,12 +73,9 @@
 						</td>
 						<td>
 							<select style="width: 132px" name="characteristics" required>
-								<% 
-								List<Characteristic> characteristics = (List<Characteristic>) request.getAttribute("character");
-								for(Characteristic ch : characteristics){ 
-								%>
-									<option value="<%= ch.getId()%>"><%= ch.getName()%></option>
-								<%} %>
+								<c:forEach items="${character }" var= "ch">
+									<option value="${ch.id }"><c:out value="${ch.name }"></c:out></option>
+								</c:forEach>
 							</select>
 						</td>
 					</tr>

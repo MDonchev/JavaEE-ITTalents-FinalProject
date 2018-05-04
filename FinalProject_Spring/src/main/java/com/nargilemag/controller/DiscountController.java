@@ -7,6 +7,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,10 +17,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.nargilemag.model.Product;
 import com.nargilemag.model.dao.ProductDao;
+import com.nargilemag.util.exceptions.ProductDataException;
+import com.nargilemag.util.validation.ProductCredentialValidation;
 
 @Controller
 public class DiscountController {
 
+	@Autowired
+	private JavaMailSenderImpl mailSender;
+	
+	
 	@RequestMapping(value = "/discount", method = RequestMethod.GET)
 	public String showDiscountPage(Model model, HttpSession session, HttpServletRequest request) {
 		
@@ -41,12 +49,13 @@ public class DiscountController {
 	@RequestMapping(value = "/discount", method = RequestMethod.POST)
 	public String applyDiscount(@ModelAttribute Product product, Model model, HttpServletRequest request) {
 		
-		
 		try {
+			ProductCredentialValidation.numberValidation(product.getDiscountPercent());
 			ProductDao.INSTANCE.updateDiscountPercentByProductId(product.getId(), product.getDiscountPercent());
+			List<String> usersFavEmails = ProductDao.INSTANCE.getAllEmailsOfUsersWithFavoriteProductId(product.getId());
 			
-			
-		} catch (SQLException e) {
+			MailSender.INSTANCE.sendEmail(mailSender,usersFavEmails,"Your favourite product: "+ product.getName() +" already has a discount");
+		} catch (SQLException | ProductDataException e) {
 			request.setAttribute("exception", e);
 			e.printStackTrace();
 			return "error";

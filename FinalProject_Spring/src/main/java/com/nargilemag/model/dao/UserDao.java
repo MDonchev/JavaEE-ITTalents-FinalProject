@@ -53,7 +53,6 @@ public enum UserDao implements IUserDao{
 		}
 	}
 	
-	// TODO : make it better
 	public User getUserFromLogin(String username, String pass) throws SQLException, UserDataException {
 		String sql = "SELECT id, username, password, email, address, phone_number, is_admin, balance, gender_id FROM users WHERE username = ?";
 		
