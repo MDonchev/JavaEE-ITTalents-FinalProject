@@ -60,7 +60,7 @@
 							Category
 						</td>
 						<td>
-							<select style="width: 132px" name="category" required>
+							<select style="width: 132px" id="category" required>
 								<c:forEach items="${categories }" var= "cat">
 									<option value="${cat.id }" id="${cat.parent }"><c:out value="${cat.name }"></c:out></option>
 								</c:forEach>
@@ -72,9 +72,9 @@
 							Characteristics
 						</td>
 						<td>
-							<select style="width: 132px" name="characteristics" required>
+							<select style="width: 132px" id="characteristics" required>
 								<c:forEach items="${character }" var= "ch">
-									<option value="${ch.id }"><c:out value="${ch.name }"></c:out></option>
+									<option value="${ch.id }" id="${ch.category }"><c:out value="${ch.name }"></c:out></option>
 								</c:forEach>
 							</select>
 						</td>
@@ -92,4 +92,26 @@
 				<input type="submit" value="Add Product"><br>
 			</form>
 	</body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+				$('#category').val("");
+				$('#characteristics').val("");
+			   //function to show city
+			   var showCharacteristic = function(selectedCategory){
+			    $('#characteristics option').hide();
+			       $('#characteristics').find('option').filter(function(){
+			            var ch = $(this).attr("id");
+			            return selectedCategory == ch;
+			        }).show();
+			       $('#characteristics').val("");
+			    };
+		
+			    //on change event call showCity function 
+			    $('#category').change(function(){
+			    	var cat = $('#category option:selected').attr("id");
+			       showCharacteristic(cat);
+			    });
+			});
+	</script>
 </html>
