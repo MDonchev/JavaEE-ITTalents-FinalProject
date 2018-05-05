@@ -1,6 +1,7 @@
 package com.nargilemag.controller;
 
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 import java.sql.SQLException;
 import java.sql.Connection;
@@ -9,7 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.connector.Request;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,38 +35,57 @@ import com.nargilemag.util.exceptions.OrderedProductsAmmountException;
 public class OrderController {
 
 	@RequestMapping(value = {"","decrease"}, method = RequestMethod.GET)
-	public String showProductsInCart(HttpServletRequest request) {
+	public String showProductsInCart(Model model, HttpSession session) {
 		
-		Map<Product, Integer> cart = (Map<Product, Integer>) request.getSession().getAttribute("cart");
+		Map<Product, Integer> cart = (Map<Product, Integer>) session.getAttribute("cart");
 		
-		request.setAttribute("cart", cart);
+		Double totalPrice = 0.0;
+		for(Product product : cart.keySet()) {
+			totalPrice += cart.get(product) * product.getPrice();
+		}
+		
+		model.addAttribute("product", new Product());
+		session.setAttribute("totalPrice", totalPrice);
+		
 		
 		return "order";
 	}
 	 
 	
 	@RequestMapping(value = "/decrease", method = RequestMethod.POST)
-	public String decreaseCount(HttpServletRequest request) {
-		Map<Product, Integer> cart = (Map<Product, Integer>) request.getSession().getAttribute("cart");
-		String productName = request.getParameter("productName");
+	public String decreaseCount(@ModelAttribute Product product, HttpSession session, Model model) {
+		Map<Product, Integer> cart = (Map<Product, Integer>) session.getAttribute("cart");
+		Double totalPrice = (Double)session.getAttribute("totalPrice");
 		
-		for(Product product : cart.keySet()) {
-			boolean broke = false;
-			if(product.getName().compareTo(productName) == 0) {
-				if(cart.get(product) > 0) {
-					cart.put(product, cart.get(product) - 1);
-					broke = true;
-				}
+		if(cart.containsKey(product)) {
+			if(cart.get(product) > 1) {
+				cart.put(product, cart.get(product) - 1);
 			}
-			if(cart.get(product) <= 0) {
+			else {
 				cart.remove(product);
-				if(broke == true) {
-					break;
-				}
 			}
+			totalPrice -= product.getPrice();
 		}
 		
-		request.getSession().setAttribute("cart", cart);
+		
+		session.setAttribute("cart", cart);
+		session.setAttribute("totalPrice", totalPrice);
+		
+		return "/order";
+	}
+	
+	@RequestMapping(value = "/increase", method = RequestMethod.POST)
+	public String increaseCount(@ModelAttribute Product product, HttpSession session) {
+		Map<Product, Integer> cart = (Map<Product, Integer>) session.getAttribute("cart");
+		Double totalPrice = (Double)session.getAttribute("totalPrice");
+		
+		if(cart.containsKey(product)) {
+			cart.put(product, cart.get(product) + 1);
+			totalPrice += product.getPrice();
+		}
+		
+		session.setAttribute("cart", cart);
+		session.setAttribute("totalPrice", totalPrice);
 		
 		return "/order";
 	}
@@ -72,7 +94,7 @@ public class OrderController {
 	public synchronized String finalizeOrder(HttpServletRequest request) {
 		
 		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) request.getSession().getAttribute("cart");
-		double totalPrice = 0;
+		double totalPrice = (Double)request.getSession().getAttribute("totalPrice");
 		
 		User user = (User) request.getSession().getAttribute("user");
 		
@@ -84,7 +106,6 @@ public class OrderController {
 				if(product.getAmmountInStock() < cart.get(product)) {
 					throw new OrderedProductsAmmountException("Not enough in stock");
 				}
-				totalPrice += cart.get(product) * (product.getPrice() - product.getDiscountPercent() / 100 * product.getPrice()); //subtracting the discount amount
 			}
 			
 			if(user.getBalance() < totalPrice) {
@@ -95,8 +116,8 @@ public class OrderController {
 			try {
 				connection.setAutoCommit(false);
 				Order order = new Order(LocalDate.now(), user.getAddress(), user.getPhoneNumber(), user.getId(), cart);
+				OrderDao.INSTANCE.addOrderFromUser(order, user);
 				for(Product product : cart.keySet()) {
-					OrderDao.INSTANCE.addOrderFromUser(order, user);
 					OrderDao.INSTANCE.addProductToOrder(order, product);
 					ProductDao.INSTANCE.updateProductAmmountInStock(product.getId(), product.getAmmountInStock() - cart.get(product));
 					

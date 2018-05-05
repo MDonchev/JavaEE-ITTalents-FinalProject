@@ -69,7 +69,7 @@ public class Product {
 	}
 
 	public double getPrice() {
-		return price;
+		return price - (discountPercent / 100) * price;
 	}
 
 	public void setPrice(double price) {
@@ -126,6 +126,7 @@ public class Product {
 		result = prime * result + categoryId;
 		result = prime * result + ((characteristics == null) ? 0 : characteristics.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + discountPercent;
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		long temp;
@@ -156,6 +157,8 @@ public class Product {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
+			return false;
+		if (discountPercent != other.discountPercent)
 			return false;
 		if (id != other.id)
 			return false;
