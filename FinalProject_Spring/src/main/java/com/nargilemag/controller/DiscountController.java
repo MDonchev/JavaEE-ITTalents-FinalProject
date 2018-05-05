@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.nargilemag.model.Product;
+import com.nargilemag.model.User;
 import com.nargilemag.model.dao.ProductDao;
 import com.nargilemag.util.exceptions.ProductDataException;
 import com.nargilemag.util.validation.ProductCredentialValidation;
@@ -47,14 +48,26 @@ public class DiscountController {
 	}
 	
 	@RequestMapping(value = "/discount", method = RequestMethod.POST)
-	public String applyDiscount(@ModelAttribute Product product, Model model, HttpServletRequest request) {
+	public String applyDiscount(@ModelAttribute Product product, Model model, HttpServletRequest request, HttpSession session) {
 		
 		try {
+			//TODO product name plqs plqs, mario e mnogo dobur priqtel
 			ProductCredentialValidation.numberValidation(product.getDiscountPercent());
 			ProductDao.INSTANCE.updateDiscountPercentByProductId(product.getId(), product.getDiscountPercent());
 			List<String> usersFavEmails = ProductDao.INSTANCE.getAllEmailsOfUsersWithFavoriteProductId(product.getId());
 			
-			MailSender.INSTANCE.sendEmail(mailSender,usersFavEmails,"Your favourite product: "+ product.getName() +" already has a discount");
+			List<Product> products = ProductDao.INSTANCE.getAllProducts();
+			model.addAttribute("loggedUser", session.getAttribute("user"));
+			model.addAttribute("products", products);
+			User u = (User)session.getAttribute("user");
+			List<Product> userFavouritesProducts = ProductDao.INSTANCE.getUserFavourites(u);
+			model.addAttribute("favourites", userFavouritesProducts);
+			
+
+			new Thread(() -> { 
+					MailSender.INSTANCE.sendEmail(mailSender,usersFavEmails,"Your favourite product: "+ product.getName() +" has been updated");
+				}).start(); 
+				
 		} catch (SQLException | ProductDataException e) {
 			request.setAttribute("exception", e);
 			e.printStackTrace();

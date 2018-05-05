@@ -25,8 +25,9 @@
 							<c:out value="${ch.value }"></c:out>
 						</c:forEach>
 					</td>
-					<td><form action="updateProduct" method="GET">
+					<td><form action="deleteProduct" method="POST">
 						<input type="hidden" name="deleted_product" value="${p.id }">
+						<input type="hidden" name="deleted_product_name" value="${p.name }">
 						<input type="submit" value="Delete Product">
 					</form></td>
 				</tr>

@@ -42,6 +42,10 @@
 						<input type='submit' value='Discount Products' />
 					</f:form>
 					
+					<f:form action="deleteProduct" method="get">
+						<input type='submit' value='Delete Products' />
+					</f:form>
+					
 					
 					
 				</c:if>

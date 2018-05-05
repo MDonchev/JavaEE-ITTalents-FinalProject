@@ -158,7 +158,10 @@ public class ProductController {
 			ProductDao.INSTANCE.updateProductAmmountInStock(product.getId(), product.getAmmountInStock() + ammount);
 			List<String> usersFavEmails = ProductDao.INSTANCE.getAllEmailsOfUsersWithFavoriteProductId(product.getId());
 			
-			MailSender.INSTANCE.sendEmail(mailSender,usersFavEmails,"Your favourite product: "+ product.getName() +" has been updated");
+			new Thread(() -> { 
+					MailSender.INSTANCE.sendEmail(mailSender,usersFavEmails,"Your favourite product: "+ product.getName() +" has been updated");
+				}).start(); 
+				
 			
 			return "redirect:/";
 		} catch (ProductDataException | SQLException e) {
@@ -167,5 +170,34 @@ public class ProductController {
 		}
 		
 	}
-	
+	@RequestMapping(value = "/deleteProduct", method = RequestMethod.GET)
+	public String deleteProductsPage(HttpServletRequest request, Model m) {
+		try {
+			List<Product> products = ProductDao.INSTANCE.getAllProducts();
+			m.addAttribute("products", products);
+			return "deleteProduct";
+		} catch (SQLException e) {
+			request.setAttribute("exception", e);
+			return "error";
+		}
+	}
+	@RequestMapping(value = "/deleteProduct", method = RequestMethod.POST)
+	public String deleteProduct(HttpServletRequest request) {
+		try {
+			int productId = Integer.parseInt(request.getParameter("deleted_product"));
+			String productName = request.getParameter("deleted_product_name");
+			List<String> usersFavEmails = ProductDao.INSTANCE.getAllEmailsOfUsersWithFavoriteProductId(productId);
+			
+			new Thread(() -> { 
+				MailSender.INSTANCE.sendEmail(mailSender, usersFavEmails, "Your favourite product: " + productName + " has been deleted");
+			}).start();
+			
+			ProductDao.INSTANCE.deleteProductByID(productId);
+			
+			return "redirect:/";
+		} catch (SQLException e) {
+			request.setAttribute("exception", e);
+			return "error";
+		}
+	}
 }

@@ -151,7 +151,8 @@ public enum ProductDao {
 			try {
 				ResultSet result = null;
 				//Insert in products table
-				try(PreparedStatement ps = connection.prepareStatement("INSERT INTO products (name, description, price, ammount_in_stock, category_id, img_url) VALUES (?,?,?,?,?,?);",Statement.RETURN_GENERATED_KEYS)){
+				try(PreparedStatement ps = connection.prepareStatement("INSERT INTO products (name, description, price, ammount_in_stock, category_id, img_url) "
+						+ "VALUES (?,?,?,?,?,?);",Statement.RETURN_GENERATED_KEYS)){
 					ps.setString(1, prod.getName());
 					ps.setString(2, prod.getDescription());
 					ps.setDouble(3, prod.getPrice());
@@ -264,6 +265,14 @@ public enum ProductDao {
 			}
 		}
 		return products;
+	}
+
+	public void deleteProductByID(int productId) throws SQLException {
+		String sql = "DELETE FROM products WHERE id = ?";
+		try(PreparedStatement ps = connection.prepareStatement(sql);){
+			ps.setInt(1, productId);
+			ps.executeUpdate();
+		}
 	}
 
 }
