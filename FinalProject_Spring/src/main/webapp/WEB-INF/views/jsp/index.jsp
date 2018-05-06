@@ -99,6 +99,12 @@
 								<input type="submit" value="Add to favourites">
 							</form>
 						</td>
+						<td>
+							<form action="viewProduct" method="GET">
+								<input type="hidden" name="product_to_view" value="${p.id }">
+								<input type="submit" value="View">
+							</form>
+						</td>
 					</c:if>
 				</tr>
 			</c:forEach>
