@@ -1,5 +1,7 @@
 package com.nargilemag.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -201,5 +203,30 @@ public class ProductController {
 			request.setAttribute("exception", e);
 			return "error";
 		}
+	}
+	@RequestMapping(value = "/viewProduct", method = RequestMethod.GET)
+	public String viewProduct(Model model, HttpServletRequest request) {
+		
+		
+		Product product = null;
+		String category = null;
+		try {
+			int productId = Integer.parseInt(request.getParameter("product_to_view"));
+			product = ProductDao.INSTANCE.getProductBtID(productId);
+			category = CategoryDao.INSTANCE.getCategoryNameById(product.getCategoryId());
+			
+		}
+		catch (SQLException e) {
+			request.setAttribute("exception", e);
+			e.printStackTrace();
+			return "error";
+		}
+		
+		model.addAttribute("product", product);
+		model.addAttribute("category", category);
+		model.addAttribute("characteristic", product.getCharacteristics().get(0).getName());
+		model.addAttribute("characteristicValue", product.getCharacteristics().get(0).getValue());
+		
+		return "viewProduct";
 	}
 }

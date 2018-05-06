@@ -1,6 +1,7 @@
 package com.nargilemag.model.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -40,6 +41,18 @@ public enum CategoryDao {
 			cats.add(new Category(result.getInt("id"), result.getString("name"), null));
 		}
 		return cats;
+	}
+	
+	public String getCategoryNameById(int id) throws SQLException {
+		String sql = "SELECT name FROM categories where id = ?;";
+		
+		 try(PreparedStatement ps = connection.prepareStatement(sql)){
+			 ps.setInt(1, id);
+			 
+			 ResultSet rs = ps.executeQuery();
+			 rs.next();
+			 return rs.getString("name");
+		 }
 	}
 	
 }

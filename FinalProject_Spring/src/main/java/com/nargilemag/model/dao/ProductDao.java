@@ -198,8 +198,7 @@ public enum ProductDao {
 	public ArrayList<Product> getProductsWithNameLike(String str) throws SQLException{
 		String sql = "SELECT id, name, description, price, ammount_in_stock, category_id, img_url, discount_percent "
 					+ "FROM products "
-					+ "WHERE name LIKE \"%" + str + "%\" "
-					+ "LIMIT 10";	
+					+ "WHERE name LIKE \"%" + str + "%\" ";
 		
 		
 		ArrayList<Product> result = new ArrayList<>();
