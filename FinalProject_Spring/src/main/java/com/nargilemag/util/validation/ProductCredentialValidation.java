@@ -10,7 +10,12 @@ public final class ProductCredentialValidation {
 	
 	public static void numberValidation(String number) throws ProductDataException{
 		ProductDataException exception = new ProductDataException("number must be whole and possitive.");
-		if (!stringValidation(number)) throw exception;
+		if (!stringValidation(number)) {
+			throw exception;
+		}
+		if(number.length() == 1 && number.charAt(0) == '0') {
+			throw exception;
+		}
 		for(int i = 0; i< number.length(); i++) {
 			if(!('0' <= number.charAt(i) && number.charAt(i)<= '9')){
 				throw exception;
