@@ -51,7 +51,7 @@ public class DiscountController {
 	public String applyDiscount(@ModelAttribute Product product, Model model, HttpServletRequest request, HttpSession session) {
 		
 		try {
-			//TODO product name plqs plqs, mario e mnogo dobur priqtel
+			
 			ProductCredentialValidation.numberValidation(product.getDiscountPercent());
 			ProductDao.INSTANCE.updateDiscountPercentByProductId(product.getId(), product.getDiscountPercent());
 			List<String> usersFavEmails = ProductDao.INSTANCE.getAllEmailsOfUsersWithFavoriteProductId(product.getId());

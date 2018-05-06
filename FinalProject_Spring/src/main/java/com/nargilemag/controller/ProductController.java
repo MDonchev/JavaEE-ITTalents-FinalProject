@@ -51,13 +51,15 @@ public class ProductController {
 	@RequestMapping(value = "/addproduct", method = RequestMethod.GET)
 	public String addProductPage(HttpServletRequest request) {
 		try {
-			//get genders from db
-			List<Category> categories = CategoryDao.INSTANCE.getSubCategories();
+			//get needed information from db
+			List<Category> categories = CategoryDao.INSTANCE.getCategories();
+			List<Category> subcategories = CategoryDao.INSTANCE.getSubCategories();
 			List<Characteristic> characteristics = CharacteristicDao.INSTANCE.getAllCharacteristics();
 			//add them to request
 			request.setAttribute("categories", categories);
+			request.setAttribute("subcategories", subcategories);
 			request.setAttribute("character", characteristics);
-			//forward this request to register.jsp
+			//forward this request to addproduct.jsp
 			return "addproduct";
 		} catch (SQLException e) {
 			e.printStackTrace();

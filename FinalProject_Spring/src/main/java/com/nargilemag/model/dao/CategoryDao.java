@@ -30,4 +30,16 @@ public enum CategoryDao {
 		}
 		return cats;
 	}
+	
+	public List<Category> getCategories() throws SQLException {
+		String sql = "SELECT id, name FROM categories where categories_id is null;";
+		Statement s = connection.createStatement();
+		ResultSet result = s.executeQuery(sql);
+		List<Category> cats = new ArrayList<>();
+		while(result.next()) {
+			cats.add(new Category(result.getInt("id"), result.getString("name"), null));
+		}
+		return cats;
+	}
+	
 }

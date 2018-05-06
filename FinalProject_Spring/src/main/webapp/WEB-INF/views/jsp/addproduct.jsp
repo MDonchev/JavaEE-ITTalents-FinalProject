@@ -62,6 +62,18 @@
 						<td>
 							<select style="width: 132px" id="category" required>
 								<c:forEach items="${categories }" var= "cat">
+									<option id="${cat.id }"><c:out value="${cat.name }"></c:out></option>
+								</c:forEach>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Sub Category
+						</td>
+						<td>
+							<select style="width: 132px" name="category" id="subcategory"required>
+								<c:forEach items="${subcategories }" var= "cat">
 									<option value="${cat.id }" id="${cat.parent }"><c:out value="${cat.name }"></c:out></option>
 								</c:forEach>
 							</select>
@@ -72,7 +84,7 @@
 							Characteristics
 						</td>
 						<td>
-							<select style="width: 132px" id="characteristics" required>
+							<select style="width: 132px" name="characteristics" id="characteristics"required>
 								<c:forEach items="${character }" var= "ch">
 									<option value="${ch.id }" id="${ch.category }"><c:out value="${ch.name }"></c:out></option>
 								</c:forEach>
@@ -96,8 +108,9 @@
 	<script type="text/javascript">
 		$(function(){
 				$('#category').val("");
+				$('#subcategory').val("");
 				$('#characteristics').val("");
-			   //function to show city
+			  	//functions for filtering subcategories and characteristic
 			   var showCharacteristic = function(selectedCategory){
 			    $('#characteristics option').hide();
 			       $('#characteristics').find('option').filter(function(){
@@ -106,11 +119,21 @@
 			        }).show();
 			       $('#characteristics').val("");
 			    };
-		
-			    //on change event call showCity function 
+				
+			    var showSubCategories = function(selectedCategory){
+				    $('#subcategory option').hide();
+				       $('#subcategory').find('option').filter(function(){
+				            var parent = $(this).attr("id");
+				            return selectedCategory == parent;
+				        }).show();
+				       $('#subcategory').val("");
+				    };
+			
+			    //on change event call show sub categories and characteristic 
 			    $('#category').change(function(){
 			    	var cat = $('#category option:selected').attr("id");
-			       showCharacteristic(cat);
+			    	showSubCategories(cat);
+			    	showCharacteristic(cat);
 			    });
 			});
 	</script>

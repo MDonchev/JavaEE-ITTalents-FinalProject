@@ -49,9 +49,6 @@
 					
 					
 				</c:if>
-				<f:form action = "sorted" method = "get">
-					<input style = "text-align: left" type = "submit" value = "Sort By Price" />
-				</f:form>
 			</c:when>
 			<c:otherwise>
 				<f:form action="login" method="GET">
@@ -59,6 +56,11 @@
 				</f:form>
 				<f:form action="register" method="GET">
 					<input type='submit' value='Register' />
+				</f:form>
+				<f:form action = "sorted" method = "get" commandName = "sort">
+					<input type="radio" >Asc<br>
+					<input type="radio" >Desc<br>
+					<input style = "text-align: left" type = "submit" value = "Sort" />
 				</f:form>
 			</c:otherwise>
 		</c:choose>

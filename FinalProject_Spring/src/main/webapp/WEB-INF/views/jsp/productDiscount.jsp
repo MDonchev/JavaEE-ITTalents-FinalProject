@@ -26,6 +26,7 @@
 		<td>
 			<form:form commandName = "product" action = "discount" method = "post">
 				<form:input type = "hidden" path = "id" value = "${item.id }" />
+				<form:input type = "hidden" path = "name" value = "${item.name }" />
 				<form:input type = "text" path = "discountPercent" style = "width : 10%" value = "0"/>
 				<input type = "submit" value = "set" />
 			</form:form>
