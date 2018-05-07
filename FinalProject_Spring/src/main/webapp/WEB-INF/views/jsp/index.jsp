@@ -53,8 +53,9 @@
 												<c:out value="${loggedUser.username }"></c:out>
 											</a>
 											<ul class="account_selection">
-												<li><a href="logout">logout</a></li>
-												<li><a href="order">Favourites</a></li>
+												<li><a href="logout">Logout</a></li>
+												<li><a href="favourites">Favourites</a></li>
+												<li><a href="order">Cart</a></li>
 											</ul>
 										</c:when>
 										<c:otherwise>
@@ -86,9 +87,11 @@
 						</div>
 						<nav class="navbar">
 							<ul class="navbar_menu">
-								<li><a href="#">home</a></li>
-								<li><a href="#">shop</a></li>
-								<li><a href="#">promotion</a></li>
+								<li><a href="#">HOME</a></li>
+								<c:forEach items="${categories }" var="p">
+									<li><a href="#"><c:out value="${p.name }"></c:out></a></li>
+								</c:forEach>
+								
 								
 							</ul>
 							<ul class="navbar_user">
@@ -119,21 +122,21 @@
 				<div class="col-md-4">
 					<div class="banner_item align-items-center" style="background-image:url(img/nargile-mini-zeleno.jpg)">
 						<div class="banner_category">
-							<a href="#">Наргилета</a>
+							<a href="#">hookahs</a>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="banner_item align-items-center" style="background-image:url(img/tobacoo.jpg)">
 						<div class="banner_category">
-							<a href="#">Тютюн</a>
+							<a href="#">tobacco</a>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="banner_item align-items-center" style="background-image:url(img/box.jpg)">
 						<div class="banner_category">
-							<a href="#">въглени</a>
+							<a href="#">boxes cubes</a>
 						</div>
 					</div>
 				</div>
@@ -148,7 +151,7 @@
 			<div class="row">
 				<div class="col text-center">
 					<div class="section_title new_arrivals_title">
-						<h2>промоции</h2>
+						<h2>promotions</h2>
 					</div>
 				</div>
 			</div>
@@ -162,7 +165,7 @@
 									<div class="product-item">
 										<div class="product discount">
 											<div class="product_image">
-												<img src="download/${pr.imgURL}" alt=""/>
+												<a href="product/${pr.id }"><img src="download/${pr.imgURL}" alt=""/></a>
 											</div>
 											<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-<c:out value="${pr.getDiscountPercent()}"></c:out>%</span></div>
 											<div class="product_info">
@@ -194,7 +197,7 @@
 			<div class="row">
 				<div class="col text-center">
 					<div class="section_title new_arrivals_title">
-						<h2>нашите продукти</h2>
+						<h2>our products</h2>
 					</div>
 				</div>
 			</div>

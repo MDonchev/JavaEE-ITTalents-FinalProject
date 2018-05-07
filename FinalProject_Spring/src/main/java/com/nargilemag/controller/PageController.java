@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.nargilemag.model.Category;
 import com.nargilemag.model.Product;
 import com.nargilemag.model.User;
+import com.nargilemag.model.dao.CategoryDao;
 import com.nargilemag.model.dao.ProductDao;
 
 @Controller
@@ -26,11 +28,12 @@ public class PageController {
 		try{
 			List<Product> products = ProductDao.INSTANCE.getAllProducts();
 			List<Product> promotions = ProductDao.INSTANCE.getAllPromotions();
+			List<Category> mainCategories = CategoryDao.INSTANCE.getCategories();
 			User u = (User)session.getAttribute("user");
 			m.addAttribute("loggedUser", u);
 			m.addAttribute("products", products);
 			m.addAttribute("promotions", promotions);
-		
+			m.addAttribute("categories", mainCategories);
 			return "index";
 		}
 		catch (SQLException e) {
@@ -66,5 +69,23 @@ public class PageController {
 		
 		return "index";
 	}
-	
+	@RequestMapping(value="/favourites", method=RequestMethod.GET)
+	public String showFavourites(Model model, HttpServletRequest request, HttpSession session) {
+		try {
+			User u = (User)session.getAttribute("user");
+			List<Product> favourites = new ArrayList<>();
+			favourites = ProductDao.INSTANCE.getUserFavourites(u);
+			List<Category> mainCategories = CategoryDao.INSTANCE.getCategories();
+			model.addAttribute("loggedUser", u);
+			model.addAttribute("favourites", favourites);
+			model.addAttribute("categories", mainCategories);
+			
+			return "favourites";
+		} catch (SQLException e) {
+			request.setAttribute("exception", e);
+			e.printStackTrace();
+			return "error";
+		}
+		
+	}
 }
