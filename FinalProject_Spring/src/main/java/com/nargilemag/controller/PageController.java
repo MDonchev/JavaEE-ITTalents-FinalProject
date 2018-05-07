@@ -25,14 +25,11 @@ public class PageController {
 	public String indexPage(Model m, HttpSession session){
 		try{
 			List<Product> products = ProductDao.INSTANCE.getAllProducts();
-			List<Product> userFavouritesProducts = new ArrayList<Product>();
+			List<Product> promotions = ProductDao.INSTANCE.getAllPromotions();
 			User u = (User)session.getAttribute("user");
-			if (u != null){
-				userFavouritesProducts = ProductDao.INSTANCE.getUserFavourites(u);
-			}
 			m.addAttribute("loggedUser", u);
 			m.addAttribute("products", products);
-			m.addAttribute("favourites", userFavouritesProducts);
+			m.addAttribute("promotions", promotions);
 		
 			return "index";
 		}

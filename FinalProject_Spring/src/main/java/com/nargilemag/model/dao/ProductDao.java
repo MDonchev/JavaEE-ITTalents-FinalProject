@@ -274,4 +274,27 @@ public enum ProductDao {
 		}
 	}
 
+	public List<Product> getAllPromotions() throws SQLException{
+String sql = "SELECT id, name, description, price, ammount_in_stock, category_id, img_url, discount_percent FROM products WHERE discount_percent > 0";
+		
+		ArrayList<Product> products = new ArrayList();
+		
+		Statement s = connection.createStatement();
+		ResultSet result = s.executeQuery(sql);
+			
+		while(result.next()) {
+				products.add(new Product(
+						result.getInt("id"),
+						result.getString("name"),
+						result.getString("description"),
+						result.getDouble("price"),
+						result.getInt("ammount_in_stock"),
+						result.getInt("category_id"),
+						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(result.getInt("id")),
+						result.getString("img_url"),
+						result.getInt("discount_percent")));
+		}
+		return products;
+	}
+
 }

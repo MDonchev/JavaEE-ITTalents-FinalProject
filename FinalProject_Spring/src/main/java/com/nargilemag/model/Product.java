@@ -69,9 +69,11 @@ public class Product {
 	}
 
 	public double getPrice() {
-		return price - (discountPercent / 100) * price;
+		return price;
 	}
-
+	public Double getDiscountPrice() {
+		return this.price - this.discountPercent*0.01*this.price;
+	}
 	public void setPrice(double price) {
 		this.price = price;
 	}
