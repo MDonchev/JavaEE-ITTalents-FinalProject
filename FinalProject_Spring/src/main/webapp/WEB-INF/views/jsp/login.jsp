@@ -101,7 +101,7 @@
 		<div class="container" style="padding:200px;">
 			
 		            <form class="form-horizontal" role="form" action = "login" method = "post">
-		                <h2>Login Form</h2>
+		                <h2>Sign In</h2>
 		                <div class="form-group">
 		                    <label for="username" class="col-sm-3 control-label">Username</label>
 		                    <div class="col-sm-9">

@@ -15,6 +15,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import com.nargilemag.model.Category;
 import com.nargilemag.model.Characteristic;
 import com.nargilemag.model.Gender;
 import com.nargilemag.model.Product;
+import com.nargilemag.model.User;
 import com.nargilemag.model.dao.CategoryDao;
 import com.nargilemag.model.dao.CharacteristicDao;
 import com.nargilemag.model.dao.ProductDao;
@@ -110,8 +112,7 @@ public class ProductController {
 		}
 		
 	}
-	
-	@RequestMapping(value="/download/{filename:.+}", method=RequestMethod.GET)
+	@RequestMapping(value= {"/download/{filename:.+}","/product/download/{filename:.+}"}, method=RequestMethod.GET)
 	public void downloadFile(HttpServletResponse resp, @PathVariable("filename") String fileName, HttpServletRequest request) {
 		File serverFile = new File(PRODUCT_IMG_FILE_PATH + fileName);
 		try {
@@ -204,28 +205,39 @@ public class ProductController {
 			return "error";
 		}
 	}
-	@RequestMapping(value = "/viewProduct", method = RequestMethod.GET)
-	public String viewProduct(Model model, HttpServletRequest request) {
-		
+	@RequestMapping(value = "/product/{productID}", method = RequestMethod.GET)
+	public String viewProduct(Model model, HttpServletRequest request,@PathVariable("productID") Integer productID, HttpSession session) {
+		User u = (User)session.getAttribute("user");
+		model.addAttribute("loggedUser", u);
 		
 		Product product = null;
 		String category = null;
 		try {
-			int productId = Integer.parseInt(request.getParameter("product_to_view"));
-			product = ProductDao.INSTANCE.getProductBtID(productId);
-			category = CategoryDao.INSTANCE.getCategoryNameById(product.getCategoryId());
+
+			if(u != null) {
+				List<Product> userFavourites = ProductDao.INSTANCE.getUserFavourites(u);
+				boolean contains = false;
+				for(Product p : userFavourites) {
+					if (p.getId() == productID) {
+						contains = true;
+					}
+				}
+				model.addAttribute("contains",contains);
+			}
 			
+			product = ProductDao.INSTANCE.getProductBtID(productID);
+			category = CategoryDao.INSTANCE.getCategoryNameById(product.getCategoryId());
 		}
 		catch (SQLException e) {
 			request.setAttribute("exception", e);
 			e.printStackTrace();
 			return "error";
 		}
-		
 		model.addAttribute("product", product);
 		model.addAttribute("category", category);
 		model.addAttribute("characteristic", product.getCharacteristics().get(0).getName());
 		model.addAttribute("characteristicValue", product.getCharacteristics().get(0).getValue());
+		model.addAttribute("characteristicUnit", product.getCharacteristics().get(0).getUnit());
 		
 		return "viewProduct";
 	}

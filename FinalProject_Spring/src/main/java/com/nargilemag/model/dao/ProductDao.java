@@ -1,6 +1,6 @@
 package com.nargilemag.model.dao;
 
-import java.lang.reflect.Array;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -265,7 +265,8 @@ public enum ProductDao {
 		}
 		return products;
 	}
-
+	
+	
 	public void deleteProductByID(int productId) throws SQLException {
 		String sql = "DELETE FROM products WHERE id = ?";
 		try(PreparedStatement ps = connection.prepareStatement(sql);){
@@ -275,7 +276,7 @@ public enum ProductDao {
 	}
 
 	public List<Product> getAllPromotions() throws SQLException{
-String sql = "SELECT id, name, description, price, ammount_in_stock, category_id, img_url, discount_percent FROM products WHERE discount_percent > 0";
+		String sql = "SELECT id, name, description, price, ammount_in_stock, category_id, img_url, discount_percent FROM products WHERE discount_percent > 0";
 		
 		ArrayList<Product> products = new ArrayList();
 		

@@ -1,25 +1,249 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.nargilemag.model.Product"%>
+<%@page import="com.nargilemag.model.dao.ProductDao"%>
+<%@page import="java.util.List"%>
+<%@page import="com.nargilemag.model.User"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Single Product</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Colo Shop Template">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../css/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="../css/owl.theme.default.css">
+<link rel="stylesheet" type="text/css" href="../css/animate.css">
+<link rel="stylesheet" href="../css/themify-icons.css">
+<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="../css/single_styles.css">
+<link rel="stylesheet" type="text/css" href="../css/single_responsive.css">
+<link rel="stylesheet" type="text/css" href="../css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
+
 <body>
 
-	<img src="download/${product.imgURL}" height="100" width="100"/><br>
-	Product name: <c:out value="${product.name }"></c:out><br>
-	Description: <c:out value="${product.description }"></c:out><br>
-	Price: <c:out value="${product.price }"></c:out><br>
-	Amount in stock: <c:out value="${product.ammountInStock }"></c:out><br>
-	Category: <c:out value="${category }"></c:out><br>
-	Discount %: <c:out value="${product.discountPercent }"></c:out><br>
-	Characteristics: <c:out value="${characteristic } ${characteristicValue }"></c:out>
+<div class="super_container">
+
+	<!-- Header -->
+
+	<header class="header trans_300">
+
+		<!-- Top Navigation -->
+
+		<div class="top_nav">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6"></div>
+					<div class="col-md-6 text-right">
+						<div class="top_nav_right">
+							<ul class="top_nav_menu">
+
+								<!-- My Account -->
+								<li class="account">
+									<c:choose>
+										<c:when test="${not empty loggedUser}">
+											<a href="#">
+												<c:out value="${loggedUser.username }"></c:out>
+											</a>
+											<ul class="account_selection">
+												<li><a href="../logout">logout</a></li>
+												<li><a href="../order">Favourites</a></li>
+											</ul>
+										</c:when>
+										<c:otherwise>
+											<a href="#">
+												My Account
+											</a>
+											<ul class="account_selection">
+												<li><a href="../login"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
+												<li><a href="../register"><i class="fa fa-user-plus" aria-hidden="true"></i>SignUp</a></li>
+											</ul>
+										</c:otherwise>
+									</c:choose>	
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Main Navigation -->
+
+		<div class="main_nav_container">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12 text-right">
+						<div class="logo_container">
+							<a href="#">наргиле<span>mag</span></a>
+						</div>
+						<nav class="navbar">
+							<ul class="navbar_menu">
+								<li><a href="#">home</a></li>
+								<li><a href="#">shop</a></li>
+								<li><a href="#">promotion</a></li>
+								
+							</ul>
+							<ul class="navbar_user">
+								<f:form class="example" action="search" style="margin:auto;max-width:300px" method="POST">
+  									<input type="text" placeholder="Search.." name="name">
+ 									<button type="submit"><i class="fa fa-search"></i></button>
+								</f:form>
+							</ul>
+
+							
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</header>
+
+
+	<div class="fs_menu_overlay"></div>
+
+	<!-- Hamburger Menu -->
+
+	<div class="hamburger_menu">
+		<div class="hamburger_close"><i class="fa fa-times" aria-hidden="true"></i></div>
+		<div class="hamburger_menu_content text-right">
+			<ul class="menu_top_nav">
+				<li class="menu_item has-children">
+					<a href="#">
+						usd
+						<i class="fa fa-angle-down"></i>
+					</a>
+					<ul class="menu_selection">
+						<li><a href="#">cad</a></li>
+						<li><a href="#">aud</a></li>
+						<li><a href="#">eur</a></li>
+						<li><a href="#">gbp</a></li>
+					</ul>
+				</li>
+				<li class="menu_item has-children">
+					<a href="#">
+						English
+						<i class="fa fa-angle-down"></i>
+					</a>
+					<ul class="menu_selection">
+						<li><a href="#">French</a></li>
+						<li><a href="#">Italian</a></li>
+						<li><a href="#">German</a></li>
+						<li><a href="#">Spanish</a></li>
+					</ul>
+				</li>
+				<li class="menu_item has-children">
+					<a href="#">
+						My Account
+						<i class="fa fa-angle-down"></i>
+					</a>
+					<ul class="menu_selection">
+						<li><a href="#"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
+						<li><a href="#"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
+					</ul>
+				</li>
+				<li class="menu_item"><a href="#">home</a></li>
+				<li class="menu_item"><a href="#">shop</a></li>
+				<li class="menu_item"><a href="#">promotion</a></li>
+				<li class="menu_item"><a href="#">pages</a></li>
+				<li class="menu_item"><a href="#">blog</a></li>
+				<li class="menu_item"><a href="#">contact</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="container single_product_container">
 	
+		<div class="row">
+			<div class="col-lg-7">
+				<div class="single_product_pics">
+					<div class="row">
+						
+						<div class="col-lg-9 image_col order-lg-2 order-1">
+							<div class="single_product_image">
+								<div class="single_product_image_background" style="background-image:url('download/${product.imgURL}')"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-5">
+				<div class="product_details">
+					<div class="product_details_title" style="padding-top:60px;">
+						<h2><c:out value="${product.name }"></c:out></h2>
+						<p>&nbsp;<c:out value="${product.getDescription() }"></c:out></p>
+						<p>&nbsp;ON STOCK: &nbsp;<c:out value="${product.getAmmountInStock()}"></c:out></p>
+						<p>&nbsp;CATEGORY: &nbsp;<c:out value="${category}"></c:out></p>
+						<p>&nbsp;<c:out value="${characteristic} :"></c:out>&nbsp;
+								<c:out value="${characteristicValue}"></c:out>
+								<c:if test="${not empty characteristicUnit }">
+									<c:out value="${characteristicUnit}"></c:out>
+								</c:if>		
+						</p>
+						
+					</div>
+					<c:choose>
+						<c:when test="${product.getDiscountPercent() > 0}">
+							<div class="original_price"><c:out value="${product.price } лв."></c:out></div>
+							<div class="product_price"><c:out value="${product.getDiscountPrice() } лв."></c:out></div>
+	
+						</c:when>
+						<c:otherwise>
+							<div class="product_price"><c:out value="${product.price } лв."></c:out></div>						
+						</c:otherwise>
+					</c:choose>
+					<c:if test="${not empty loggedUser}">
+						<div class="quantity d-flex flex-column flex-sm-row align-items-sm-center">
+							<f:form action="../addToCart" class="cartbutton" method="GET">
+									<div class="red_button add_to_cart_button">
+										<input type="hidden" name="ordered_product" value="${product.getId() }">
+										<input type="submit" value="Add to cart">
+									</div>
+								</f:form>
+							<c:choose>
+								<c:when  test="${contains }">
+									<f:form action="../removeFavourite" class="cartbutton" method="POST">
+											<div class="red_button add_to_cart_button">
+												<input type="hidden" name="fav_product" value="${product.getId() }">
+												<input type="submit" value="Remove from favs">
+											</div>
+									</f:form>
+								</c:when>
+								<c:otherwise>
+									<f:form action="../addToFavourites" class="cartbutton" method="POST">
+											<div class="red_button add_to_cart_button">
+												<input type="hidden" name="fav_product" value="${product.getId() }">
+												<input type="submit" value="Add to favs">
+											</div>
+									</f:form>
+								</c:otherwise>
+							</c:choose>
+						</div>
+					</c:if>
+				</div>
+			</div>
+		</div>
 
+	</div>
+</div>
 
-
+<script src="../js/jquery-3.2.1.min.js"></script>
+<script src="../js/popper.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/isotope.pkgd.min.js"></script>
+<script src="../js/owl.carousel.js"></script>
+<script src="../js/easing.js"></script>
+<script src="../js/jquery-ui.js"></script>
+<script src="../js/single_custom.js"></script>
 </body>
+
 </html>

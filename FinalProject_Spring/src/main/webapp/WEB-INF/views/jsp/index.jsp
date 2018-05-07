@@ -164,7 +164,6 @@
 											<div class="product_image">
 												<img src="download/${pr.imgURL}" alt=""/>
 											</div>
-											<div class="favorite favorite_left"></div>
 											<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-<c:out value="${pr.getDiscountPercent()}"></c:out>%</span></div>
 											<div class="product_info">
 												<h6 class="product_name"><a href="#"><c:out value="${pr.name }"></c:out></a></h6>
@@ -206,11 +205,8 @@
 							<div class="product-item men">
 							<div class="product discount product_filter">
 								<div class="product_image">
-									<img src="download/${p.imgURL}" alt=""/>
+									<a href="product/${p.id }"><img src="download/${p.imgURL}" alt=""/></a>
 								</div>
-								<c:if test="${not empty loggedUser}">
-									<div class="favorite favorite_left"></div>
-								</c:if>
 								<!-- промоции -->
 								<c:if test="${p.discountPercent > 0}">
 									<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-<c:out value="${p.getDiscountPercent()}"></c:out>%</span></div>
@@ -257,7 +253,7 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/isotope.pkgd.min.js"></script>
 <script src="js/owl.carousel.js"></script>
-<script src="js//easing.js"></script>
+<script src="js/easing.js"></script>
 <script src="js/custom.js"></script>
 </body>
 

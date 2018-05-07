@@ -103,7 +103,7 @@
 		<div class="container" style="padding:200px;">
 	
             <form class="form-horizontal" role="form" action = "register" method = "post">
-                <h2>Registration Form</h2>
+                <h2>Sign Up</h2>
                 <div class="form-group">
                     <label for="username" class="col-sm-3 control-label">Username</label>
                     <div class="col-sm-9">
