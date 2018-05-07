@@ -7,137 +7,258 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>NargileMag.bg</title>
+<title>Добре дошли в НаргилеМаг</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Colo Shop Template">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="css/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="css/owl.theme.default.css">
+<link rel="stylesheet" type="text/css" href="css/animate.css">
+<link rel="stylesheet" type="text/css" href="css/main_styles.css">
+<link rel="stylesheet" type="text/css" href="css/responsive.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
+
 <body>
+
+<div class="super_container">
+
+	<!-- Header -->
+
+	<header class="header trans_300">
+
+		<!-- Top Navigation -->
+
+		<div class="top_nav">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6"></div>
+					<div class="col-md-6 text-right">
+						<div class="top_nav_right">
+							<ul class="top_nav_menu">
+
+								<!-- My Account -->
+								<li class="account">
+									<c:choose>
+										<c:when test="${not empty loggedUser}">
+											<a href="#">
+												<c:out value="${loggedUser.username }"></c:out>
+											</a>
+											<ul class="account_selection">
+												<li><a href="logout">logout</a></li>
+												<li><a href="order">Favourites</a></li>
+											</ul>
+										</c:when>
+										<c:otherwise>
+											<a href="#">
+												My Account
+											</a>
+											<ul class="account_selection">
+												<li><a href="login"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
+												<li><a href="register"><i class="fa fa-user-plus" aria-hidden="true"></i>SignUp</a></li>
+											</ul>
+										</c:otherwise>
+									</c:choose>	
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Main Navigation -->
+
+		<div class="main_nav_container">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12 text-right">
+						<div class="logo_container">
+							<a href="#">наргиле<span>mag</span></a>
+						</div>
+						<nav class="navbar">
+							<ul class="navbar_menu">
+								<li><a href="#">home</a></li>
+								<li><a href="#">shop</a></li>
+								<li><a href="#">promotion</a></li>
+								
+							</ul>
+							<ul class="navbar_user">
+								<f:form class="example" action="search" style="margin:auto;max-width:300px" method="POST">
+  									<input type="text" placeholder="Search.." name="name">
+ 									<button type="submit"><i class="fa fa-search"></i></button>
+								</f:form>
+							</ul>
+
+							
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</header>
+
 	
-	<div style = "text-align: center">
-		<h1>Welcome to Nargilemag.bg</h1>
-		<c:choose>
-			<c:when test="${not empty loggedUser}">
-				<h1>Welcome, <c:out value="${loggedUser.username}"></c:out></h1>
-				<h3 style="color:green; text-align: right"><c:out value="${loggedUser.balance}"/>$</h3>
-				<f:form action = "search" method = "post">
-					<input type = "text" name = "name"/>
-					<input type = "submit" value = "search"/>
-				</f:form>
 
-				<form action="logout" method="post">
-					<input type='submit' value='Logout' />
-				</form>
-				<c:if test="${loggedUser.admin }">
-					<f:form action="addproduct" method="get">
-						<input type='submit' value='Add Product' />
-					</f:form>
-					<f:form action="updateProductAmount" method="get">
-						<input type='submit' value='Update Products Amount' />
-					</f:form>
-					
-					
-					<f:form action="discount" method="get">
-						<input type='submit' value='Discount Products' />
-					</f:form>
-					
-					<f:form action="deleteProduct" method="get">
-						<input type='submit' value='Delete Products' />
-					</f:form>
-					
-					
-					
-				</c:if>
-			</c:when>
-			<c:otherwise>
-				<f:form action="login" method="GET">
-					<input type='submit' value='Login' />
-				</f:form>
-				<f:form action="register" method="GET">
-					<input type='submit' value='Register' />
-				</f:form>
-				<f:form action = "sorted" method = "get" commandName = "sort">
-					<input type="radio" >Asc<br>
-					<input type="radio" >Desc<br>
-					<input style = "text-align: left" type = "submit" value = "Sort" />
-				</f:form>
-			</c:otherwise>
-		</c:choose>
-		
-		<table align = "center">
-			<tr>
-				<td>Name:</td>
-				<td>Description:</td>
-				<td>Price:</td>
-				<td>Amount:</td>
-				<td>Characteristics:</td>
-			</tr>
-			<c:forEach items="${products }" var="p">
-				<tr>
-					<td><c:out value="${p.name }"></c:out></td>
-					<td><c:out value="${p.description }"></c:out></td>
-					<td><c:out value="${p.price }"></c:out></td>
-					<td><c:out value="${p.ammountInStock }"></c:out></td>
-					<td>
-						<c:forEach items="${p.characteristics }" var="ch">
-							<c:out value="${ch.name }">:</c:out>
-							<c:out value="${ch.value }"></c:out>
-						</c:forEach>
-					</td>
-					<td><img src="download/${p.imgURL}" height="100" width="100"/></td>
-					<c:if test="${not empty loggedUser}">
-						<td>
-							<form action="addToCart" method="GET">
-								<input type="hidden" name="ordered_product" value="${p.getId() }">
-								<input type="submit" value="Add to cart">
-							</form>
-						</td>
-						<td>
-							<form action="addToFavourites" method="POST">
-								<input type="hidden" name="fav_product" value="${p.id }">
-								<input type="submit" value="Add to favourites">
-							</form>
-						</td>
-						<td>
-							<form action="viewProduct" method="GET">
-								<input type="hidden" name="product_to_view" value="${p.id }">
-								<input type="submit" value="View">
-							</form>
-						</td>
-					</c:if>
-				</tr>
-			</c:forEach>
+	<div class="main_slider"></div>
 
-		</table>
-		
-		<c:if test="${not empty loggedUser }">
-			<table>
-				<c:forEach items="${favourites }" var="p">
-					<tr>
-						<td><c:out value="${p.name }"></c:out></td>
-						<td><c:out value="${p.description }"></c:out></td>
-						<td><c:out value="${p.price }"></c:out></td>
-						<td><c:out value="${p.ammountInStock }"></c:out></td>
-						<td>
-							<c:forEach items="${p.characteristics }" var="ch">
-								<c:out value="${ch.name }">:</c:out>
-								<c:out value="${ch.value }"></c:out>
-							</c:forEach>
-						</td>
-						<td><img src="download/${p.imgURL}" height="100" width="100"/></td>
-						<td>
-							<form action="removeFavourite" method="POST">
-								<input type="hidden" name="fav_product" value="${p.id }">
-								<input type="submit" value="Remove to favourites">
-							</form>
-						</td>
-					</tr>
-				</c:forEach>
-			</table>
-			
-			<a href="order"> Show Cart</a>
-		</c:if>
+	<!-- Banner -->
+	<div></div>
+	<div class="banner">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="banner_item align-items-center" style="background-image:url(img/nargile-mini-zeleno.jpg)">
+						<div class="banner_category">
+							<a href="#">Наргилета</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="banner_item align-items-center" style="background-image:url(img/tobacoo.jpg)">
+						<div class="banner_category">
+							<a href="#">Тютюн</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="banner_item align-items-center" style="background-image:url(img/box.jpg)">
+						<div class="banner_category">
+							<a href="#">въглени</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
+
+	<!-- New Arrivals -->
+	
+	<div class="best_sellers">
+		<div class="container">
+			<div class="row">
+				<div class="col text-center">
+					<div class="section_title new_arrivals_title">
+						<h2>промоции</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<div class="product_slider_container">
+						<div class="owl-carousel owl-theme product_slider">
+							
+							<c:forEach items="${promotions }" var="pr">
+								<div class="owl-item product_slider_item">
+									<div class="product-item">
+										<div class="product discount">
+											<div class="product_image">
+												<img src="download/${pr.imgURL}" alt=""/>
+											</div>
+											<div class="favorite favorite_left"></div>
+											<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-<c:out value="${pr.getDiscountPercent()}"></c:out>%</span></div>
+											<div class="product_info">
+												<h6 class="product_name"><a href="#"><c:out value="${pr.name }"></c:out></a></h6>
+												<div class="product_price">$<c:out value="${pr.getDiscountPrice()}"></c:out><span>$<c:out value="${pr.price}"></c:out></span></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</c:forEach>
+							
+						</div>
+
+						<!-- Slider Navigation -->
+
+						<div class="product_slider_nav_left product_slider_nav d-flex align-items-center justify-content-center flex-column">
+							<i class="fa fa-chevron-left" aria-hidden="true"></i>
+						</div>
+						<div class="product_slider_nav_right product_slider_nav d-flex align-items-center justify-content-center flex-column">
+							<i class="fa fa-chevron-right" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="new_arrivals">
+		<div class="container">
+			<div class="row">
+				<div class="col text-center">
+					<div class="section_title new_arrivals_title">
+						<h2>нашите продукти</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<div class="product-grid" data-isotope='{ "itemSelector": ".product-item", "layoutMode": "fitRows" }'>
+						<c:forEach items="${products }" var="p">
+							<div class="product-item men">
+							<div class="product discount product_filter">
+								<div class="product_image">
+									<img src="download/${p.imgURL}" alt=""/>
+								</div>
+								<c:if test="${not empty loggedUser}">
+									<div class="favorite favorite_left"></div>
+								</c:if>
+								<!-- промоции -->
+								<c:if test="${p.discountPercent > 0}">
+									<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-<c:out value="${p.getDiscountPercent()}"></c:out>%</span></div>
+								</c:if>
+								<div class="product_info">
+									<h6 class="product_name"><a href="#"><c:out value="${p.name }"></c:out></a></h6>
+									<c:choose>
+										<c:when test="${p.discountPercent > 0}">
+											<div class="product_price"><c:out value="${p.getDiscountPrice()} лв."></c:out><span><c:out value="${p.price} лв."></c:out></span></div>
+										</c:when>
+										<c:otherwise>
+											<div class="product_price"><c:out value="${p.price} лв."></c:out></div>
+										</c:otherwise>
+									</c:choose>
+								</div>
+							</div>
+							<c:if test="${not empty loggedUser}">
+								<f:form action="addToCart" class="cartbutton" method="GET">
+									<div class="red_button add_to_cart_button">
+										<input type="hidden" name="ordered_product" value="${p.getId() }">
+										<input type="submit" value="Add to cart">
+									</div>
+								</f:form>
+							</c:if>
+						</div>
+						
+						
+						</c:forEach>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+	<!-- Best Sellers -->
+
+	<div class="benefit"></div>
+</div>
+
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/isotope.pkgd.min.js"></script>
+<script src="js/owl.carousel.js"></script>
+<script src="js//easing.js"></script>
+<script src="js/custom.js"></script>
 </body>
+
 </html>
