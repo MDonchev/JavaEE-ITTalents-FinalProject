@@ -30,11 +30,6 @@ public class SearchBoxController {
 		}
 		
 		model.addAttribute("searchResult", result);
-		
-		
-		
-		
-		
 		return "searchResult";
 	}
 	

@@ -33,5 +33,7 @@ public class Category {
 	public void setParent(Integer parent) {
 		this.parent = parent;
 	}
-	
+	public boolean isMain() {
+		return parent == 0;
+	}
 }

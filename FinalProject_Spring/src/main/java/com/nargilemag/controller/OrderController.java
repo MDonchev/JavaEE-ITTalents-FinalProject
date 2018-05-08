@@ -36,7 +36,7 @@ public class OrderController {
 		
 		Double totalPrice = 0.0;
 		for(Product product : cart.keySet()) {
-			totalPrice += cart.get(product) * product.getPrice();
+			totalPrice += cart.get(product) * product.getDiscountPrice();
 		}
 		
 		model.addAttribute("product", new Product());
@@ -59,7 +59,7 @@ public class OrderController {
 			else {
 				cart.remove(product);
 			}
-			totalPrice -= product.getPrice();
+			totalPrice -= product.getDiscountPrice();
 		}
 		
 		
@@ -76,7 +76,7 @@ public class OrderController {
 		
 		if(cart.containsKey(product)) {
 			cart.put(product, cart.get(product) + 1);
-			totalPrice += product.getPrice();
+			totalPrice += product.getDiscountPrice();
 		}
 		
 		session.setAttribute("cart", cart);

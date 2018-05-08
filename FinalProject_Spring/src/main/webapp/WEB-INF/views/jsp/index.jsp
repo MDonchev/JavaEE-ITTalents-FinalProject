@@ -56,6 +56,7 @@
 												<li><a href="logout">Logout</a></li>
 												<li><a href="favourites">Favourites</a></li>
 												<li><a href="order">Cart</a></li>
+												<li><c:out value="${loggedUser.balance } лв."></c:out></li>
 											</ul>
 										</c:when>
 										<c:otherwise>
@@ -87,9 +88,9 @@
 						</div>
 						<nav class="navbar">
 							<ul class="navbar_menu">
-								<li><a href="#">HOME</a></li>
+								<li><a href="index">HOME</a></li>
 								<c:forEach items="${categories }" var="p">
-									<li><a href="#"><c:out value="${p.name }"></c:out></a></li>
+									<li><a href="category/${p.id}"><c:out value="${p.name }"></c:out></a></li>
 								</c:forEach>
 								
 								
@@ -122,21 +123,21 @@
 				<div class="col-md-4">
 					<div class="banner_item align-items-center" style="background-image:url(img/nargile-mini-zeleno.jpg)">
 						<div class="banner_category">
-							<a href="#">hookahs</a>
+							<a href="category/1">hookahs</a>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="banner_item align-items-center" style="background-image:url(img/tobacoo.jpg)">
 						<div class="banner_category">
-							<a href="#">tobacco</a>
+							<a href="category/2">tobacco</a>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="banner_item align-items-center" style="background-image:url(img/box.jpg)">
 						<div class="banner_category">
-							<a href="#">boxes cubes</a>
+							<a href="category/3">boxes cubes</a>
 						</div>
 					</div>
 				</div>
@@ -146,52 +147,7 @@
 
 	<!-- New Arrivals -->
 	
-	<div class="best_sellers">
-		<div class="container">
-			<div class="row">
-				<div class="col text-center">
-					<div class="section_title new_arrivals_title">
-						<h2>promotions</h2>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-					<div class="product_slider_container">
-						<div class="owl-carousel owl-theme product_slider">
-							
-							<c:forEach items="${promotions }" var="pr">
-								<div class="owl-item product_slider_item">
-									<div class="product-item">
-										<div class="product discount">
-											<div class="product_image">
-												<a href="product/${pr.id }"><img src="download/${pr.imgURL}" alt=""/></a>
-											</div>
-											<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-<c:out value="${pr.getDiscountPercent()}"></c:out>%</span></div>
-											<div class="product_info">
-												<h6 class="product_name"><a href="#"><c:out value="${pr.name }"></c:out></a></h6>
-												<div class="product_price">$<c:out value="${pr.getDiscountPrice()}"></c:out><span>$<c:out value="${pr.price}"></c:out></span></div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</c:forEach>
-							
-						</div>
-
-						<!-- Slider Navigation -->
-
-						<div class="product_slider_nav_left product_slider_nav d-flex align-items-center justify-content-center flex-column">
-							<i class="fa fa-chevron-left" aria-hidden="true"></i>
-						</div>
-						<div class="product_slider_nav_right product_slider_nav d-flex align-items-center justify-content-center flex-column">
-							<i class="fa fa-chevron-right" aria-hidden="true"></i>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	
 	<div class="new_arrivals">
 		<div class="container">
 			<div class="row">
@@ -244,7 +200,53 @@
 			</div>
 		</div>
 	</div>
+	<div class="best_sellers">
+		<div class="container">
+			<div class="row">
+				<div class="col text-center">
+					<div class="section_title new_arrivals_title">
+						<h2>promotions</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<div class="product_slider_container">
+						<div class="owl-carousel owl-theme product_slider">
+							
+							<c:forEach items="${promotions }" var="pr">
+								<div class="owl-item product_slider_item">
+									<div class="product-item">
+										<div class="product discount">
+											<div class="product_image">
+												<a href="product/${pr.id }"><img src="download/${pr.imgURL}" alt=""/></a>
+											</div>
+											<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-<c:out value="${pr.getDiscountPercent()}"></c:out>%</span></div>
+											<div class="product_info">
+												<h6 class="product_name"><a href="#"><c:out value="${pr.name }"></c:out></a></h6>
+												<div class="product_price">$<c:out value="${pr.getDiscountPrice()}"></c:out><span>$<c:out value="${pr.price}"></c:out></span></div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+							</c:forEach>
+							
+						</div>
 
+						<!-- Slider Navigation -->
+
+						<div class="product_slider_nav_left product_slider_nav d-flex align-items-center justify-content-center flex-column">
+							<i class="fa fa-chevron-left" aria-hidden="true"></i>
+						</div>
+						<div class="product_slider_nav_right product_slider_nav d-flex align-items-center justify-content-center flex-column">
+							<i class="fa fa-chevron-right" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	
 	<!-- Best Sellers -->
 

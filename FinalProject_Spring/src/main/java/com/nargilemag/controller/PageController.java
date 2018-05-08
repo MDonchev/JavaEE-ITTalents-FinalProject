@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -43,7 +44,36 @@ public class PageController {
 		}
 	
 	}
+	@RequestMapping(value = "/category/{categoryID}", method = RequestMethod.GET)
+	public String categoryPage(Model m, HttpSession session, @PathVariable("categoryID") Integer categoryID){
+		try{
+			List<Product> products = null;
+			List<Category> subcategories = new ArrayList<>();
+			List<Category> mainCategories = CategoryDao.INSTANCE.getCategories();
+			Category cat = CategoryDao.INSTANCE.getCategoryById(categoryID);
+			
+			if(cat.getParent() == 0) {
+				products = ProductDao.INSTANCE.getAllProductsByMainCategoryId(cat.getId());
+				subcategories = CategoryDao.INSTANCE.getSubCategoriesByID(cat.getId());
+			} else {
+				products = ProductDao.INSTANCE.getAllProductsByCategoryId(cat.getId());
+			}
+			
+			User u = (User)session.getAttribute("user");
+			m.addAttribute("loggedUser", u);
+			m.addAttribute("products", products);
+			m.addAttribute("categories", mainCategories);
+			m.addAttribute("subcategories", subcategories);
+			m.addAttribute("currentcat", cat);
+			return "category";
+		}
+		catch (SQLException e) {
+			m.addAttribute("exception", e);
+			e.printStackTrace();
+			return "error";
+		}
 	
+	}
 	@RequestMapping(value = "/sorted", method = RequestMethod.GET)
 	public String showSortedProducts(Model model, HttpServletRequest request, HttpSession session) {
 		

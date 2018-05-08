@@ -54,5 +54,33 @@ public enum CategoryDao {
 			 return rs.getString("name");
 		 }
 	}
+
+
+	public Category getCategoryById(Integer categoryID) throws SQLException{
+		String sql = "SELECT id, name, categories_id FROM categories where id = ?;";
+		
+		 try(PreparedStatement ps = connection.prepareStatement(sql)){
+			 ps.setInt(1, categoryID);
+			 
+			 ResultSet rs = ps.executeQuery();
+			 rs.next();
+			 return new Category(rs.getInt("id"), rs.getString("name"), rs.getInt("categories_id"));
+		 }
+	}
+
+
+	public List<Category> getSubCategoriesByID(Integer id) throws SQLException{
+		String sql = "SELECT id, name, categories_id FROM categories where categories_id = ?;";
+		 try(PreparedStatement ps = connection.prepareStatement(sql)){
+			 ps.setInt(1, id);
+			 
+			 ResultSet rs = ps.executeQuery();
+			 List<Category> cats = new ArrayList<>();
+			 while(rs.next()) {
+				cats.add(new Category(rs.getInt("id"), rs.getString("name"), rs.getInt("categories_id")));
+			 }
+			 return cats;
+		 }
+	}
 	
 }

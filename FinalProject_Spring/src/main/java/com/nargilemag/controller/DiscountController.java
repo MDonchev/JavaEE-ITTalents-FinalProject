@@ -31,9 +31,9 @@ public class DiscountController {
 	@RequestMapping(value = "/discount", method = RequestMethod.GET)
 	public String showDiscountPage(Model model, HttpSession session, HttpServletRequest request) {
 		
-		List<Product> allProducts = new ArrayList<Product>();
+		
 		try {
-			allProducts = ProductDao.INSTANCE.getAllProducts();
+			
 		} catch (SQLException e) {
 			request.setAttribute("exception", e);
 			return "error";

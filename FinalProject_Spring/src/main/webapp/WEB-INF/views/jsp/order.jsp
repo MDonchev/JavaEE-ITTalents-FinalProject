@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="ISO-8859-1"%>
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
@@ -9,14 +9,14 @@
 <head>
 	<title>Cart</title>
 	
-	<base href="http://localhost:8080/MyProject/order">
+	<base href="http://localhost:8080/nargilemag/order">
 	
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="description" content="Colo Shop Template">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-	<link href="../css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" type="text/css" href="css/owl.carousel.css">
 	<link rel="stylesheet" type="text/css" href="css/owl.theme.default.css">
 	<link rel="stylesheet" type="text/css" href="css/animate.css">
@@ -54,8 +54,8 @@
 												<c:out value="${user.username }"></c:out>
 											</a>
 											<ul class="account_selection">
-												<li><a href="../logout">logout</a></li>
-												<li><a href="../order">Favourites</a></li>
+												<li><a href="logout">logout</a></li>
+												<li><a href="favourites">Favourites</a></li>
 											</ul>
 										</c:when>
 										<c:otherwise>
@@ -95,7 +95,7 @@
 							<ul class="navbar_user">
 								<f:form class="example" action="search" style="margin:auto;max-width:300px" method="POST">
   									<input type="text" placeholder="Search.." name="name">
- 									<button type="submit"><i class="fa fa-search"></i></button>
+ 									<button type="submit" style="height:45px;"><i class="fa fa-search"></i></button>
 								</f:form>
 							</ul>
 
@@ -120,7 +120,7 @@
 				<div class="product_details">
 					<div class="product_details_title" style="padding-top:60px;">
 						<h2><c:out value="${item.key.name }"></c:out></h2>
-						<p>&nbsp;PRICE: &nbsp;<c:out value="${item.key.price}"></c:out></p>
+						<p>&nbsp;PRICE: &nbsp;<c:out value="${item.key.getDiscountPrice()}"></c:out></p>
 						<p>&nbsp;AMOUNT: &nbsp;<c:out value="${item.value }"></c:out></p>
 					</div>
 				</div>
@@ -166,18 +166,14 @@
 					
 				</div>
 			</div>
-		</div>
 
-	</div>
-</div>
-
-<script src="js/jquery-3.2.1.min.js"></script>
-<script src="js/popper.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/isotope.pkgd.min.js"></script>
-<script src="js/owl.carousel.js"></script>
-<script src="js/easing.js"></script>
-<script src="js/jquery-ui.js"></script>
-<script src="js/single_custom.js"></script>
+<script src="../js/jquery-3.2.1.min.js"></script>
+<script src="../js/popper.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/isotope.pkgd.min.js"></script>
+<script src="../js/owl.carousel.js"></script>
+<script src="../js/easing.js"></script>
+<script src="../js/jquery-ui.js"></script>
+<script src="../js/single_custom.js"></script>
 </body>
 </html>

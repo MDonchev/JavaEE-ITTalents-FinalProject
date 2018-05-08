@@ -91,8 +91,7 @@ public enum ProductDao {
 	
 	public List<Product> getAllProductsByCategoryId(int id) throws SQLException {
 		
-		String sql = "SELECT p.id, p.name, description, price, ammount_in_stock, category_id, img_url, discount_percent FROM products p"
-				+ "JOIN categories c ON category_id = ?";
+		String sql = "SELECT p.id, p.name, description, price, ammount_in_stock, category_id, img_url, discount_percent FROM products p WHERE category_id = ?";
 		
 		ArrayList<Product> products = new ArrayList();
 		
@@ -294,6 +293,33 @@ public enum ProductDao {
 						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(result.getInt("id")),
 						result.getString("img_url"),
 						result.getInt("discount_percent")));
+		}
+		return products;
+	}
+
+	public List<Product> getAllProductsByMainCategoryId(Integer id) throws SQLException{
+		String sql = "SELECT p.id, p.name, p.description, p.price, p.ammount_in_stock, p.category_id, p.img_url, p.discount_percent FROM products AS p JOIN categories AS c ON category_id = c.id WHERE c.categories_id = ?";
+		
+		ArrayList<Product> products = new ArrayList();
+		
+		try(PreparedStatement ps = connection.prepareStatement(sql);){
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				products.add(new Product(
+						rs.getInt("id"),
+						rs.getString("name"),
+						rs.getString("description"),
+						rs.getDouble("price"),
+						rs.getInt("ammount_in_stock"),
+						rs.getInt("category_id"),
+						CharacteristicDao.INSTANCE.getCharacteristicsByProductId(id),
+						rs.getString("img_url"),
+						rs.getInt("discount_percent")));
+			}
+			
 		}
 		return products;
 	}

@@ -121,18 +121,6 @@ public class ProductController {
 			request.setAttribute("exception", e);
 		}
 	}
-	
-	@RequestMapping(value = "/updateProductAmount", method = RequestMethod.GET)
-	public String updateProductsPage(HttpServletRequest request, Model m) {
-		try {
-			List<Product> products = ProductDao.INSTANCE.getAllProducts();
-			m.addAttribute("products", products);
-			return "updateProduct";
-		} catch (SQLException e) {
-			request.setAttribute("exception", e);
-			return "error";
-		}
-	}
 	@RequestMapping(value = "/updateProduct", method = RequestMethod.GET)
 	public String updateProductPage(HttpServletRequest request) {
 
@@ -174,17 +162,6 @@ public class ProductController {
 			return "error";
 		}
 		
-	}
-	@RequestMapping(value = "/deleteProduct", method = RequestMethod.GET)
-	public String deleteProductsPage(HttpServletRequest request, Model m) {
-		try {
-			List<Product> products = ProductDao.INSTANCE.getAllProducts();
-			m.addAttribute("products", products);
-			return "deleteProduct";
-		} catch (SQLException e) {
-			request.setAttribute("exception", e);
-			return "error";
-		}
 	}
 	@RequestMapping(value = "/deleteProduct", method = RequestMethod.POST)
 	public String deleteProduct(HttpServletRequest request) {

@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -83,7 +83,12 @@
 								<li><a href="#">promotion</a></li>
 								
 							</ul>
-
+							<ul class="navbar_user">
+								<f:form class="example" action="search" style="margin:auto;max-width:300px" method="POST">
+  									<input type="text" placeholder="Search.." name="name">
+ 									<button type="submit" style="height:45px;"><i class="fa fa-search"></i></button>
+								</f:form>
+							</ul>
 							
 						</nav>
 					</div>
@@ -91,16 +96,9 @@
 			</div>
 			</div>
 		</header>
-	
-		<div style="padding: 200px">
-		<f:form class="example" action="search" style="margin:auto;max-width:700px" method="POST">
-				<input type="text" placeholder="Search.." name="name">
-				<button type="submit"><i class="fa fa-search"></i></button>
-		</f:form>
-		</div>
 
 	<div class="new_arrivals" align="center">
-		<div class="container">
+		<div class="container" style="padding:150px;">
 			<div class="row">
 				<div class="col text-center">
 					<div class="section_title new_arrivals_title">
@@ -118,7 +116,6 @@
 								<div class="product_image">
 									<a href="product/${p.id }"><img src="download/${p.imgURL}" alt=""/></a>
 								</div>
-								<!-- промоции -->
 								<c:if test="${p.discountPercent > 0}">
 									<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-<c:out value="${p.getDiscountPercent()}"></c:out>%</span></div>
 								</c:if>

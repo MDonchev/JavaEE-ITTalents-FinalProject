@@ -16,14 +16,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Colo Shop Template">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="css/owl.carousel.css">
-<link rel="stylesheet" type="text/css" href="css/owl.theme.default.css">
-<link rel="stylesheet" type="text/css" href="css/animate.css">
-<link rel="stylesheet" type="text/css" href="css/main_styles.css">
-<link rel="stylesheet" type="text/css" href="css/responsive.css">
-<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../css/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="../css/owl.theme.default.css">
+<link rel="stylesheet" type="text/css" href="../css/animate.css">
+<link rel="stylesheet" type="text/css" href="../css/main_styles.css">
+<link rel="stylesheet" type="text/css" href="../css/responsive.css">
+<link rel="stylesheet" type="text/css" href="../css/style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
@@ -53,9 +53,10 @@
 												<c:out value="${loggedUser.username }"></c:out>
 											</a>
 											<ul class="account_selection">
-												<li><a href="logout">Logout</a></li>
-												<li><a href="favourites">Favourites</a></li>
-												<li><a href="order">Cart</a></li>
+												<li><a href="../logout">Logout</a></li>
+												<li><a href="../favourites">Favourites</a></li>
+												<li><a href="../order">Cart</a></li>
+												<li><c:out value="${loggedUser.balance } лв."></c:out></li>
 											</ul>
 										</c:when>
 										<c:otherwise>
@@ -63,8 +64,8 @@
 												My Account
 											</a>
 											<ul class="account_selection">
-												<li><a href="login"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
-												<li><a href="register"><i class="fa fa-user-plus" aria-hidden="true"></i>SignUp</a></li>
+												<li><a href="../login"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
+												<li><a href="../register"><i class="fa fa-user-plus" aria-hidden="true"></i>SignUp</a></li>
 											</ul>
 										</c:otherwise>
 									</c:choose>	
@@ -87,15 +88,15 @@
 						</div>
 						<nav class="navbar">
 							<ul class="navbar_menu">
-								<li><a href="#">HOME</a></li>
+								<li><a href="../index">HOME</a></li>
 								<c:forEach items="${categories }" var="p">
-									<li><a href="#"><c:out value="${p.name }"></c:out></a></li>
+									<li><a href="${p.id}"><c:out value="${p.name }"></c:out></a></li>
 								</c:forEach>
 								
 								
 							</ul>
 							<ul class="navbar_user">
-								<f:form class="example" action="search" style="margin:auto;max-width:300px" method="POST">
+								<f:form class="example" action="../search" style="margin:auto;max-width:300px" method="POST">
   									<input type="text" placeholder="Search.." name="name">
  									<button type="submit"><i class="fa fa-search"></i></button>
 								</f:form>
@@ -116,47 +117,78 @@
 
 	<!-- Banner -->
 	<div></div>
-	
+	<div class="banner">
+		<div class="container">
+			<div class="row">
+			
+			<c:if test="${currentcat.isMain() }">
+				<div class="col-md-4">
+					<div class="banner_item align-items-center" style="background-image:url('../download/nargile2.jpeg')">
+						<div class="banner_category">
+							<a href="4">hookahs</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="banner_item align-items-center" style="background-image:url(img/tobacoo.jpg)">
+						<div class="banner_category">
+							<a href="">tobacco</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="banner_item align-items-center" style="background-image:url(img/box.jpg)">
+						<div class="banner_category">
+							<a href="category/6">boxes cubes</a>
+						</div>
+					</div>
+				</div>
+			</c:if>
+			</div>
+		</div>
+	</div>
 
 	<!-- New Arrivals -->
+	
 	
 	<div class="new_arrivals">
 		<div class="container">
 			<div class="row">
 				<div class="col text-center">
 					<div class="section_title new_arrivals_title">
-						<h2>favourites</h2>
+						<h2><c:out value="${currentcat.name }"></c:out></h2>
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col">
 					<div class="product-grid" data-isotope='{ "itemSelector": ".product-item", "layoutMode": "fitRows" }'>
-						<c:forEach items="${favourites }" var="f">
+						<c:forEach items="${products }" var="p">
 							<div class="product-item men">
 							<div class="product discount product_filter">
 								<div class="product_image">
-									<a href="product/${f.id }"><img src="download/${f.imgURL}" alt=""/></a>
+									<a href="../product/${p.id }"><img src="../download/${p.imgURL}" alt=""/></a>
 								</div>
-								<c:if test="${f.discountPercent > 0}">
-									<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-<c:out value="${f.getDiscountPercent()}"></c:out>%</span></div>
+								<!-- промоции -->
+								<c:if test="${p.discountPercent > 0}">
+									<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-<c:out value="${p.getDiscountPercent()}"></c:out>%</span></div>
 								</c:if>
 								<div class="product_info">
-									<h6 class="product_name"><a href="#"><c:out value="${f.name }"></c:out></a></h6>
+									<h6 class="product_name"><a href="#"><c:out value="${p.name }"></c:out></a></h6>
 									<c:choose>
-										<c:when test="${f.discountPercent > 0}">
-											<div class="product_price"><c:out value="${f.getDiscountPrice()} лв."></c:out><span><c:out value="${f.price} лв."></c:out></span></div>
+										<c:when test="${p.discountPercent > 0}">
+											<div class="product_price"><c:out value="${p.getDiscountPrice()} лв."></c:out><span><c:out value="${p.price} лв."></c:out></span></div>
 										</c:when>
 										<c:otherwise>
-											<div class="product_price"><c:out value="${f.price} лв."></c:out></div>
+											<div class="product_price"><c:out value="${p.price} лв."></c:out></div>
 										</c:otherwise>
 									</c:choose>
 								</div>
 							</div>
 							<c:if test="${not empty loggedUser}">
-								<f:form action="addToCart" class="cartbutton" method="GET">
+								<f:form action="../addToCart" class="cartbutton" method="GET">
 									<div class="red_button add_to_cart_button">
-										<input type="hidden" name="ordered_product" value="${f.getId() }">
+										<input type="hidden" name="ordered_product" value="${p.getId() }">
 										<input type="submit" value="Add to cart">
 									</div>
 								</f:form>
@@ -171,20 +203,19 @@
 			</div>
 		</div>
 	</div>
-
 	
 	<!-- Best Sellers -->
 
 	<div class="benefit"></div>
 </div>
 
-<script src="js/jquery-3.2.1.min.js"></script>
-<script src="js/popper.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/isotope.pkgd.min.js"></script>
-<script src="js/owl.carousel.js"></script>
-<script src="js/easing.js"></script>
-<script src="js/custom.js"></script>
+<script src="../js/jquery-3.2.1.min.js"></script>
+<script src="../js/popper.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/isotope.pkgd.min.js"></script>
+<script src="../js/owl.carousel.js"></script>
+<script src="../js/easing.js"></script>
+<script src="../js/custom.js"></script>
 </body>
 
 </html>
