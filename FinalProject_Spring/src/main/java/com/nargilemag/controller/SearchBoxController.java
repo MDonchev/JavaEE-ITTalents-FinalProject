@@ -20,8 +20,6 @@ public class SearchBoxController {
 
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
 	public String searchByName(@RequestParam String name, Model model, HttpServletRequest request) {
-		User u = (User) request.getSession().getAttribute("user");
-		model.addAttribute("loggedUser", u);
 		
 		ArrayList<Product> result = new ArrayList<>();
 		try {

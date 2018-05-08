@@ -39,9 +39,9 @@
 								<!-- My Account -->
 								<li class="account">
 									<c:choose>
-										<c:when test="${not empty loggedUser}">
+										<c:when test="${not empty user}">
 											<a href="#">
-												<c:out value="${loggedUser.username }"></c:out>
+												<c:out value="${user.username }"></c:out>
 											</a>
 											<ul class="account_selection">
 												<li><a href="logout">logout</a></li>
@@ -89,15 +89,15 @@
 					</div>
 				</div>
 			</div>
+			</div>
 		</header>
 	
-	
 		<div style="padding: 200px">
-			<f:form class="example" action="search" style="margin:auto;max-width:300px" method="POST">
+		<f:form class="example" action="search" style="margin:auto;max-width:700px" method="POST">
 				<input type="text" placeholder="Search.." name="name">
 				<button type="submit"><i class="fa fa-search"></i></button>
-			</f:form>
-
+		</f:form>
+		</div>
 
 	<div class="new_arrivals" align="center">
 		<div class="container">
@@ -134,7 +134,7 @@
 									</c:choose>
 								</div>
 							</div>
-							<c:if test="${not empty loggedUser}">
+							<c:if test="${not empty user}">
 								<f:form action="addToCart" class="cartbutton" method="GET">
 									<div class="red_button add_to_cart_button">
 										<input type="hidden" name="ordered_product" value="${p.getId() }">

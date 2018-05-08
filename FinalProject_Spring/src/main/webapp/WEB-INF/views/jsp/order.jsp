@@ -49,9 +49,9 @@
 								<!-- My Account -->
 								<li class="account">
 									<c:choose>
-										<c:when test="${not empty loggedUser}">
+										<c:when test="${not empty user}">
 											<a href="#">
-												<c:out value="${loggedUser.username }"></c:out>
+												<c:out value="${user.username }"></c:out>
 											</a>
 											<ul class="account_selection">
 												<li><a href="../logout">logout</a></li>
