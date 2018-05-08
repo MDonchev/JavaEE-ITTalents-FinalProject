@@ -49,7 +49,7 @@ public class ProductController {
 	@Autowired
 	private JavaMailSenderImpl mailSender;
 	
-	private static final String PRODUCT_IMG_FILE_PATH = "/home/mario/Документи/uploads-FP-ITT/"; 
+	private static final String PRODUCT_IMG_FILE_PATH = "C:\\Users\\Badbit\\Documents\\FinalProjectImages\\"; 
 	
 	
 	@RequestMapping(value = "/addproduct", method = RequestMethod.GET)
