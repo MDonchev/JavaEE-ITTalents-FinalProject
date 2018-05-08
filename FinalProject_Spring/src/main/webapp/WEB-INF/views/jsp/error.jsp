@@ -9,6 +9,6 @@
 	<body>
 		<h1>Error!</h1>
 		<h2>Reason: ${exception.message }</h2>
-		<a href="index">Back to login, sorry about that</a>
+		<a href="redirect:/">Back to login, sorry about that</a>
 	</body>
 </html>

@@ -49,15 +49,15 @@
 								<!-- My Account -->
 								<li class="account">
 									<c:choose>
-										<c:when test="${not empty loggedUser}">
+										<c:when test="${not empty user}">
 											<a href="#">
-												<c:out value="${loggedUser.username }"></c:out>
+												<c:out value="${user.username }"></c:out>
 											</a>
 											<ul class="account_selection">
 												<li><a href="../logout">Logout</a></li>
 												<li><a href="../favourites">Favourites</a></li>
 												<li><a href="../order">Cart</a></li>
-												<li><c:out value="${loggedUser.balance } лв."></c:out></li>
+												<li><c:out value="${user.balance } лв."></c:out></li>
 											</ul>
 										</c:when>
 										<c:otherwise>
@@ -157,7 +157,7 @@
 							<div class="product_price"><c:out value="${product.price } лв."></c:out></div>						
 						</c:otherwise>
 					</c:choose>
-					<c:if test="${not empty loggedUser}">
+					<c:if test="${not empty user}">
 						<div class="quantity d-flex flex-column flex-sm-row align-items-sm-center">
 							<f:form action="../addToCart" class="cartbutton" method="GET">
 									<div class="red_button add_to_cart_button">
@@ -183,7 +183,7 @@
 									</f:form>
 								</c:otherwise>
 							</c:choose>
-							<c:if test="${loggedUser.admin  }">
+							<c:if test="${user.admin  }">
 									<f:form action="../updateProduct" class="cartbutton" method="GET">
 											<div class="red_button add_to_cart_button" style="margin-top:90px;margin-left:-339px;">
 												<input type="hidden" name="changed_product" value="${product.getId() }">

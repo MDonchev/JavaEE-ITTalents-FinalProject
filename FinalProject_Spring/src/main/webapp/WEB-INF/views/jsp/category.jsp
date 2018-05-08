@@ -122,27 +122,15 @@
 			<div class="row">
 			
 			<c:if test="${currentcat.isMain() }">
-				<div class="col-md-4">
-					<div class="banner_item align-items-center" style="background-image:url('../download/nargile2.jpeg')">
-						<div class="banner_category">
-							<a href="4">hookahs</a>
+				<c:forEach items="${subcategories }" var="cat">
+					<div class="col-md-4">
+						<div class="banner_item align-items-center" style="background-image:url('../download/nargile2.jpeg')">
+							<div class="banner_category">
+								<a href="${cat.id}"><c:out value="${cat.name }"></c:out></a>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="banner_item align-items-center" style="background-image:url(img/tobacoo.jpg)">
-						<div class="banner_category">
-							<a href="">tobacco</a>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="banner_item align-items-center" style="background-image:url(img/box.jpg)">
-						<div class="banner_category">
-							<a href="category/6">boxes cubes</a>
-						</div>
-					</div>
-				</div>
+				</c:forEach>
 			</c:if>
 			</div>
 		</div>

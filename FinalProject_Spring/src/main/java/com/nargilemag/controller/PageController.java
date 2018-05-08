@@ -30,8 +30,7 @@ public class PageController {
 			List<Product> products = ProductDao.INSTANCE.getAllProducts();
 			List<Product> promotions = ProductDao.INSTANCE.getAllPromotions();
 			List<Category> mainCategories = CategoryDao.INSTANCE.getCategories();
-			User u = (User)session.getAttribute("user");
-			m.addAttribute("loggedUser", u);
+			
 			m.addAttribute("products", products);
 			m.addAttribute("promotions", promotions);
 			m.addAttribute("categories", mainCategories);
@@ -58,9 +57,7 @@ public class PageController {
 			} else {
 				products = ProductDao.INSTANCE.getAllProductsByCategoryId(cat.getId());
 			}
-			
-			User u = (User)session.getAttribute("user");
-			m.addAttribute("loggedUser", u);
+	
 			m.addAttribute("products", products);
 			m.addAttribute("categories", mainCategories);
 			m.addAttribute("subcategories", subcategories);

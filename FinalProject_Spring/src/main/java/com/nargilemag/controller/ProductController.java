@@ -54,6 +54,8 @@ public class ProductController {
 	
 	@RequestMapping(value = "/addproduct", method = RequestMethod.GET)
 	public String addProductPage(HttpServletRequest request) {
+		
+		// TODO if validate
 		try {
 			//get needed information from db
 			List<Category> categories = CategoryDao.INSTANCE.getCategories();
@@ -123,7 +125,7 @@ public class ProductController {
 	}
 	@RequestMapping(value = "/updateProduct", method = RequestMethod.GET)
 	public String updateProductPage(HttpServletRequest request) {
-
+		// TODO if alabala
 		int productId = Integer.parseInt(request.getParameter("changed_product"));
 		
 		Product p = null;
