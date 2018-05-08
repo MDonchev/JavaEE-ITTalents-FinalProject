@@ -30,19 +30,20 @@ public class DiscountController {
 	
 	@RequestMapping(value = "/discount", method = RequestMethod.GET)
 	public String showDiscountPage(Model model, HttpSession session, HttpServletRequest request) {
+		//TODO check if user is logged
 		
+		Integer discountProductId = Integer.parseInt(request.getParameter("dicount_prod_id"));
 		
+		Product product = null;
 		try {
-			
+			product = ProductDao.INSTANCE.getProductBtID(discountProductId);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			request.setAttribute("exception", e);
 			return "error";
 		}
 		
-		Product product = new Product();
-		
-		model.addAttribute("products", allProducts);
-		model.addAttribute("product", product);
+		request.setAttribute("product", product);
 		
 		return "/productDiscount";
 	}
@@ -52,8 +53,10 @@ public class DiscountController {
 		
 		try {
 			
-			ProductCredentialValidation.numberValidation(product.getDiscountPercent());
-			ProductDao.INSTANCE.updateDiscountPercentByProductId(product.getId(), product.getDiscountPercent());
+			Integer discountPercent = Integer.parseInt(request.getParameter("ammount"));
+			
+			ProductCredentialValidation.numberValidation(discountPercent);
+			ProductDao.INSTANCE.updateDiscountPercentByProductId(product.getId(), discountPercent);
 			List<String> usersFavEmails = ProductDao.INSTANCE.getAllEmailsOfUsersWithFavoriteProductId(product.getId());
 			
 			List<Product> products = ProductDao.INSTANCE.getAllProducts();

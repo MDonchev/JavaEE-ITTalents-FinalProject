@@ -190,9 +190,9 @@
 												<input type="submit" value="Update">
 											</div>
 									</f:form>
-									<f:form action="../" class="cartbutton" method="GET">
+									<f:form action="../discount" class="cartbutton" method="GET">
 										<div class="red_button add_to_cart_button" style="margin-top:90px;margin-left:-160px;">
-											<input type="hidden" name="fav_product" value="${product.getId() }">
+											<input type="hidden" name="dicount_prod_id" value="${product.getId() }">
 											<input type="submit" value="Discount">
 										</div>
 									</f:form>
