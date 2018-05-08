@@ -11,7 +11,7 @@ form.example button {
     float: left;
     width: 20%;
     padding: 10px;
-    background: #2196F3;
+    background: #fe5155;
     color: white;
     font-size: 17px;
     border: 1px solid grey;
@@ -20,7 +20,7 @@ form.example button {
 }
 
 form.example button:hover {
-    background: #0b7dda;
+    background: #e04c50;
 }
 form.cartbutton input[type="submit"] {
     border: none;
