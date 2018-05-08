@@ -5,39 +5,163 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+
+<title>Search Result</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Colo Shop Template">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="css/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="css/owl.theme.default.css">
+<link rel="stylesheet" type="text/css" href="css/animate.css">
+<link rel="stylesheet" type="text/css" href="css/main_styles.css">
+<link rel="stylesheet" type="text/css" href="css/responsive.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 <body>
 
-	<f:form action = "search" method = "post">
-		<input type = "text" name = "name"/>
-		<input type = "submit" value = "search"/>
-	</f:form>
-	<a href = "index">Home</a>
-	<table>
-	<tr>
-		<td>Name:</td>
-		<td>Description:</td>
-		<td>Price:</td>
-		<td>Discount %:</td>
-	</tr>
-		<c:forEach items = "${searchResult }" var = "item">
-		<tr>
-		<td> <c:out value="${item.name }"></c:out> </td>
-		<td> <c:out value="${item.description }"></c:out> </td>
-		<td> <c:out value="${item.price }"></c:out> </td>
-		<td> <c:out value="${item.discountPercent }"></c:out> </td>
-		<td>
-			<f:form action = "view" method = "post">
-				<input type = "hidden" name = "productId" value = "${item.id }"/>
+	<header class="header trans_300">
+
+		<!-- Top Navigation -->
+
+		<div class="top_nav">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6"></div>
+					<div class="col-md-6 text-right">
+						<div class="top_nav_right">
+							<ul class="top_nav_menu">
+
+								<!-- My Account -->
+								<li class="account">
+									<c:choose>
+										<c:when test="${not empty loggedUser}">
+											<a href="#">
+												<c:out value="${loggedUser.username }"></c:out>
+											</a>
+											<ul class="account_selection">
+												<li><a href="logout">logout</a></li>
+												<li><a href="order">Favourites</a></li>
+												<li><a href="order">Cart</a></li>
+											</ul>
+										</c:when>
+										<c:otherwise>
+											<a href="#">
+												My Account
+											</a>
+											<ul class="account_selection">
+												<li><a href="login"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
+												<li><a href="register"><i class="fa fa-user-plus" aria-hidden="true"></i>SignUp</a></li>
+											</ul>
+										</c:otherwise>
+									</c:choose>	
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Main Navigation -->
+
+		<div class="main_nav_container">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12 text-right">
+						<div class="logo_container">
+							<a href="#">наргиле<span>mag</span></a>
+						</div>
+						<nav class="navbar">
+							<ul class="navbar_menu">
+								<li><a href="#">home</a></li>
+								<li><a href="#">shop</a></li>
+								<li><a href="#">promotion</a></li>
+								
+							</ul>
+
+							
+						</nav>
+					</div>
+				</div>
+			</div>
+		</header>
+	
+	
+		<div style="padding: 200px">
+			<f:form class="example" action="search" style="margin:auto;max-width:300px" method="POST">
+				<input type="text" placeholder="Search.." name="name">
+				<button type="submit"><i class="fa fa-search"></i></button>
 			</f:form>
-		</td>
-			
-			
-		</tr>
-		</c:forEach>
-	</table>
+
+
+	<div class="new_arrivals" align="center">
+		<div class="container">
+			<div class="row">
+				<div class="col text-center">
+					<div class="section_title new_arrivals_title">
+						<h2>Result</h2>
+					</div>
+				</div>
+			</div>
+	
+		<div class="row">
+				<div class="col">
+					<div class="product-grid" data-isotope='{ "itemSelector": ".product-item", "layoutMode": "fitRows" }'>
+						<c:forEach items="${searchResult }" var="p">
+							<div class="product-item men">
+							<div class="product discount product_filter">
+								<div class="product_image">
+									<a href="product/${p.id }"><img src="download/${p.imgURL}" alt=""/></a>
+								</div>
+								<!-- промоции -->
+								<c:if test="${p.discountPercent > 0}">
+									<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-<c:out value="${p.getDiscountPercent()}"></c:out>%</span></div>
+								</c:if>
+								<div class="product_info">
+									<h6 class="product_name"><a href="#"><c:out value="${p.name }"></c:out></a></h6>
+									<c:choose>
+										<c:when test="${p.discountPercent > 0}">
+											<div class="product_price"><c:out value="${p.getDiscountPrice()} лв."></c:out><span><c:out value="${p.price} лв."></c:out></span></div>
+										</c:when>
+										<c:otherwise>
+											<div class="product_price"><c:out value="${p.price} лв."></c:out></div>
+										</c:otherwise>
+									</c:choose>
+								</div>
+							</div>
+							<c:if test="${not empty loggedUser}">
+								<f:form action="addToCart" class="cartbutton" method="GET">
+									<div class="red_button add_to_cart_button">
+										<input type="hidden" name="ordered_product" value="${p.getId() }">
+										<input type="submit" value="Add to cart">
+									</div>
+								</f:form>
+							</c:if>
+						</div>
+						
+						
+						</c:forEach>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/isotope.pkgd.min.js"></script>
+<script src="js/owl.carousel.js"></script>
+<script src="js/easing.js"></script>
+<script src="js/custom.js"></script>
+
 
 </body>
 </html>

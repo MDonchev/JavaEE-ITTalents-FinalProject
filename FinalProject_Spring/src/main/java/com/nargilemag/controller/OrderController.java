@@ -31,6 +31,8 @@ public class OrderController {
 
 	@RequestMapping(value = {"","decrease"}, method = RequestMethod.GET)
 	public String showProductsInCart(Model model, HttpSession session) {
+		User u = (User)session.getAttribute("user");
+		model.addAttribute("loggedUser", u);
 		
 		Map<Product, Integer> cart = (Map<Product, Integer>) session.getAttribute("cart");
 		

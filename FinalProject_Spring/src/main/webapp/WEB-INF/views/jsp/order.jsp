@@ -109,7 +109,9 @@
 	</header>
 
 	<div class="container single_product_container">
-	
+		<br></br>
+		<h3>Total Price:</h3>
+		<div class="product_price">${totalPrice } лв.</div>
 		<c:forEach items="${cart }" var="item">
 		<div class="row">
 			
@@ -122,7 +124,7 @@
 						<p>&nbsp;AMOUNT: &nbsp;<c:out value="${item.value }"></c:out></p>
 					</div>
 				</div>
-					<f:form commandName="product" action="/MyProject/order/increase" class="cartbutton" method="POST">
+					<f:form commandName="product" action="order/increase" class="cartbutton" method="POST">
 							<div class="red_button add_to_cart_button">
 								<input type="submit" value="Increase">
 								<f:input type = "hidden" path = "id" value = "${item.key.id }"/>
@@ -134,7 +136,7 @@
 								<f:input type = "hidden" path = "discountPercent" value = "${item.key.discountPercent }"/>
 							</div>
 					</f:form>
-					<f:form commandName="product" action="/MyProject/order/decrease" class="cartbutton" method="POST">
+					<f:form commandName="product" action="order/decrease" class="cartbutton" method="POST" style="margin-top: 2px">
 							<div class="red_button add_to_cart_button">
 								<input type="submit" value="Decrease">
 								<f:input type = "hidden" path = "id" value = "${item.key.id }"/>
@@ -146,41 +148,22 @@
 								<f:input type = "hidden" path = "discountPercent" value = "${item.key.discountPercent }"/>
 							</div>
 					</f:form>
-					
 				
 			</div>
 		</div>
 					
 		</c:forEach>
-											
-					<c:if test="${not empty loggedUser}">
-						<div class="quantity d-flex flex-column flex-sm-row align-items-sm-center">
-							<f:form action="../addToCart" class="cartbutton" method="GET">
-									<div class="red_button add_to_cart_button">
-										<input type="hidden" name="ordered_product" value="${product.getId() }">
-										<input type="submit" value="Add to cart">
-									</div>
-								</f:form>
-							<c:choose>
-								<c:when  test="${contains }">
-									<f:form action="../removeFavourite" class="cartbutton" method="POST">
-											<div class="red_button add_to_cart_button">
-												<input type="hidden" name="fav_product" value="${product.getId() }">
-												<input type="submit" value="Remove from favs">
-											</div>
-									</f:form>
-								</c:when>
-								<c:otherwise>
-									<f:form action="../addToFavourites" class="cartbutton" method="POST">
-											<div class="red_button add_to_cart_button">
-												<input type="hidden" name="fav_product" value="${product.getId() }">
-												<input type="submit" value="Add to favs">
-											</div>
-									</f:form>
-								</c:otherwise>
-							</c:choose>
-						</div>
+					<br><br><br>
+					<c:if test = "${not empty cart}">
+						<f:form action="order/finalize" class="cartbutton" method="POST">
+							<div class="red_button add_to_cart_button">
+								<input type="submit" value="Finalize Order">
+							</div>
+						</f:form>
 					</c:if>
+		
+											
+					
 				</div>
 			</div>
 		</div>
