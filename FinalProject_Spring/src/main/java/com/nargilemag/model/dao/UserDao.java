@@ -17,7 +17,7 @@ import com.nargilemag.util.exceptions.UserDataException;
 
 
 
-public enum UserDao implements IUserDao{
+public enum UserDao{
 	
 	INSTANCE;
 	

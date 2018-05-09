@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.nargilemag.model.Category;
 import com.nargilemag.model.Product;
 import com.nargilemag.model.User;
+import com.nargilemag.model.dao.CategoryDao;
 import com.nargilemag.model.dao.ProductDao;
 import com.nargilemag.util.exceptions.ProductDataException;
 import com.nargilemag.util.validation.ProductCredentialValidation;
@@ -30,22 +32,25 @@ public class DiscountController {
 	
 	@RequestMapping(value = "/discount", method = RequestMethod.GET)
 	public String showDiscountPage(Model model, HttpSession session, HttpServletRequest request) {
-		//TODO check if user is logged
 		
-		Integer discountProductId = Integer.parseInt(request.getParameter("dicount_prod_id"));
-		
-		Product product = null;
-		try {
-			product = ProductDao.INSTANCE.getProductBtID(discountProductId);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			request.setAttribute("exception", e);
-			return "error";
+		if (session.getAttribute("user") != null) {
+			try {
+				Integer discountProductId = Integer.parseInt(request.getParameter("dicount_prod_id"));
+				
+				Product product = ProductDao.INSTANCE.getProductBtID(discountProductId);
+				request.setAttribute("product", product);
+				
+				return "/productDiscount";
+				
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+				request.setAttribute("exception", e);
+				return "error";
+			}
+		} else {
+			return "redirect:/";
 		}
-		
-		request.setAttribute("product", product);
-		
-		return "/productDiscount";
 	}
 	
 	@RequestMapping(value = "/discount", method = RequestMethod.POST)
@@ -60,11 +65,16 @@ public class DiscountController {
 			List<String> usersFavEmails = ProductDao.INSTANCE.getAllEmailsOfUsersWithFavoriteProductId(product.getId());
 			
 			List<Product> products = ProductDao.INSTANCE.getAllProducts();
-			model.addAttribute("loggedUser", session.getAttribute("user"));
+			
 			model.addAttribute("products", products);
-			User u = (User)session.getAttribute("user");
-			List<Product> userFavouritesProducts = ProductDao.INSTANCE.getUserFavourites(u);
-			model.addAttribute("favourites", userFavouritesProducts);
+			
+			List<Product> promotions = ProductDao.INSTANCE.getAllPromotions();
+			List<Category> mainCategories = CategoryDao.INSTANCE.getCategories();
+			
+			
+			model.addAttribute("promotions", promotions);
+			model.addAttribute("categories", mainCategories);
+			
 			
 
 			new Thread(() -> { 

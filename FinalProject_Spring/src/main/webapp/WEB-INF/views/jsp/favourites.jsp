@@ -3,6 +3,7 @@
 <%@page import="com.nargilemag.model.dao.ProductDao"%>
 <%@page import="java.util.List"%>
 <%@page import="com.nargilemag.model.User"%>
+<% response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");  %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
@@ -56,6 +57,10 @@
 												<li><a href="logout">Logout</a></li>
 												<li><a href="favourites">Favourites</a></li>
 												<li><a href="order">Cart</a></li>
+												<c:if test="${user.admin }">
+													<li><a href="addproduct">Add Product</a></li>
+												</c:if>
+												<li><c:out value="${user.balance } лв."></c:out></li>
 											</ul>
 										</c:when>
 										<c:otherwise>
@@ -87,9 +92,9 @@
 						</div>
 						<nav class="navbar">
 							<ul class="navbar_menu">
-								<li><a href="#">HOME</a></li>
+								<li><a href="index">HOME</a></li>
 								<c:forEach items="${categories }" var="p">
-									<li><a href="#"><c:out value="${p.name }"></c:out></a></li>
+									<li><a href="category/${p.id }"><c:out value="${p.name }"></c:out></a></li>
 								</c:forEach>
 								
 								

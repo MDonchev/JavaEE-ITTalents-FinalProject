@@ -2,15 +2,16 @@
 <%@page import="com.nargilemag.model.Product"%>
 <%@page import="com.nargilemag.model.dao.ProductDao"%>
 <%@page import="java.util.List"%>
-<%@page import="com.nargilemag.model.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<% response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");  %>
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <title>Single Product</title>
+
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Colo Shop Template">
@@ -49,15 +50,18 @@
 								<!-- My Account -->
 								<li class="account">
 									<c:choose>
-										<c:when test="${not empty user}">
+										<c:when test="${not empty sessionScope.user}">
 											<a href="#">
-												<c:out value="${user.username }"></c:out>
+												<c:out value="${sessionScope.user.username }"></c:out>
 											</a>
 											<ul class="account_selection">
 												<li><a href="../logout">Logout</a></li>
 												<li><a href="../favourites">Favourites</a></li>
 												<li><a href="../order">Cart</a></li>
-												<li><c:out value="${user.balance } лв."></c:out></li>
+												<c:if test="${sessionScope.user.admin }">
+													<li><a href="../addproduct">Add Product</a></li>
+												</c:if>
+												<li><c:out value="${sessionScope.user.balance } лв."></c:out></li>
 											</ul>
 										</c:when>
 										<c:otherwise>
@@ -66,7 +70,7 @@
 											</a>
 											<ul class="account_selection">
 												<li><a href="../login"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
-												<li><a href="../register"><i class="fa fa-user-plus" aria-hidden="true"></i>SignUp</a></li>
+												<li><a href="../register"><i class="fa fa-sessionScope.user-plus" aria-hidden="true"></i>SignUp</a></li>
 											</ul>
 										</c:otherwise>
 									</c:choose>	
@@ -89,13 +93,13 @@
 						</div>
 						<nav class="navbar">
 							<ul class="navbar_menu">
-								<li><a href="#">home</a></li>
-								<li><a href="#">shop</a></li>
-								<li><a href="#">promotion</a></li>
-								
+								<li><a href="../index">HOME</a></li>
+									<c:forEach items="${categories }" var="p">
+										<li><a href="../category/${p.id}"><c:out value="${p.name }"></c:out></a></li>
+									</c:forEach>
 							</ul>
-							<ul class="navbar_user">
-								<f:form class="example" action="search" style="margin:auto;max-width:300px" method="POST">
+							<ul class="navbar_sessionScope.user">
+								<f:form class="example" action="../search" style="margin:auto;max-width:300px" method="POST">
   									<input type="text" placeholder="Search.." name="name">
  									<button type="submit"><i class="fa fa-search"></i></button>
 								</f:form>
@@ -157,7 +161,7 @@
 							<div class="product_price"><c:out value="${product.price } лв."></c:out></div>						
 						</c:otherwise>
 					</c:choose>
-					<c:if test="${not empty user}">
+					<c:if test="${not empty sessionScope.user}">
 						<div class="quantity d-flex flex-column flex-sm-row align-items-sm-center">
 							<f:form action="../addToCart" class="cartbutton" method="GET">
 									<div class="red_button add_to_cart_button">
@@ -183,7 +187,7 @@
 									</f:form>
 								</c:otherwise>
 							</c:choose>
-							<c:if test="${user.admin  }">
+							<c:if test="${sessionScope.user.admin  }">
 									<f:form action="../updateProduct" class="cartbutton" method="GET">
 											<div class="red_button add_to_cart_button" style="margin-top:90px;margin-left:-339px;">
 												<input type="hidden" name="changed_product" value="${product.getId() }">

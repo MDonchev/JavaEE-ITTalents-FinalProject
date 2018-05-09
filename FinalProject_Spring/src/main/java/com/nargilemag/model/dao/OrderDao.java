@@ -12,7 +12,7 @@ import com.nargilemag.model.Product;
 import com.nargilemag.model.User;
 
 
-public enum OrderDao implements IOrderDao{
+public enum OrderDao{
 
 	INSTANCE;
 	

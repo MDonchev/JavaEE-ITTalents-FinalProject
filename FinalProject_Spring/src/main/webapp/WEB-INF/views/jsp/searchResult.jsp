@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<% response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");  %>
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -24,6 +25,7 @@
 </head>
 <body>
 
+
 	<header class="header trans_300">
 
 		<!-- Top Navigation -->
@@ -44,9 +46,13 @@
 												<c:out value="${user.username }"></c:out>
 											</a>
 											<ul class="account_selection">
-												<li><a href="logout">logout</a></li>
-												<li><a href="order">Favourites</a></li>
+												<li><a href="logout">Logout</a></li>
+												<li><a href="favourites">Favourites</a></li>
 												<li><a href="order">Cart</a></li>
+												<c:if test="${user.admin }">
+													<li><a href="addproduct">Add Product</a></li>
+												</c:if>
+												<li><c:out value="${user.balance } лв."></c:out></li>
 											</ul>
 										</c:when>
 										<c:otherwise>
@@ -78,9 +84,11 @@
 						</div>
 						<nav class="navbar">
 							<ul class="navbar_menu">
-								<li><a href="#">home</a></li>
-								<li><a href="#">shop</a></li>
-								<li><a href="#">promotion</a></li>
+								<li><a href="index">HOME</a></li>
+								<c:forEach items="${categories }" var="p">
+									<li><a href="category/${p.id}"><c:out value="${p.name }"></c:out></a></li>
+								</c:forEach>
+								
 								
 							</ul>
 							<ul class="navbar_user">
@@ -89,14 +97,17 @@
  									<button type="submit" style="height:45px;"><i class="fa fa-search"></i></button>
 								</f:form>
 							</ul>
+
 							
 						</nav>
 					</div>
 				</div>
 			</div>
-			</div>
-		</header>
+		</div>
 
+	</header>
+
+	
 	<div class="new_arrivals" align="center">
 		<div class="container" style="padding:150px;">
 			<div class="row">

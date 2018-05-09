@@ -9,6 +9,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,21 +32,28 @@ import com.nargilemag.util.exceptions.OrderedProductsAmmountException;
 @RequestMapping(value = "/order")
 public class OrderController {
 
-	@RequestMapping(value = {"","decrease"}, method = RequestMethod.GET)
+	@Autowired
+	private JavaMailSenderImpl mailSender;
+	
+	
+	@RequestMapping(method = RequestMethod.GET)
 	public String showProductsInCart(Model model, HttpSession session) {
+		if(session.getAttribute("user") != null) {
+			Map<Product, Integer> cart = (Map<Product, Integer>) session.getAttribute("cart");
+			
+			Double totalPrice = 0.0;
+			for(Product product : cart.keySet()) {
+				totalPrice += cart.get(product) * product.getDiscountPrice();
+			}
+			
+			model.addAttribute("product", new Product());
+			session.setAttribute("totalPrice", totalPrice);
 		
-		Map<Product, Integer> cart = (Map<Product, Integer>) session.getAttribute("cart");
 		
-		Double totalPrice = 0.0;
-		for(Product product : cart.keySet()) {
-			totalPrice += cart.get(product) * product.getDiscountPrice();
+			return "order";
+		} else {
+			return "redirect:/";
 		}
-		
-		model.addAttribute("product", new Product());
-		session.setAttribute("totalPrice", totalPrice);
-		
-		
-		return "order";
 	}
 	 
 	
@@ -112,10 +122,11 @@ public class OrderController {
 				connection.setAutoCommit(false);
 				Order order = new Order(LocalDate.now(), user.getAddress(), user.getPhoneNumber(), user.getId(), cart);
 				OrderDao.INSTANCE.addOrderFromUser(order, user);
+				StringBuilder sb = new StringBuilder("Your order: ").append("<br/>");
 				for(Product product : cart.keySet()) {
 					OrderDao.INSTANCE.addProductToOrder(order, product);
 					ProductDao.INSTANCE.updateProductAmmountInStock(product.getId(), product.getAmmountInStock() - cart.get(product));
-					
+					sb.append(cart.get(product)).append(" times ").append(product.getName()).append("<br/>");
 				}
 				
 				UserDao.INSTANCE.updateBalanceById(user.getId(), user.getBalance() - totalPrice);
@@ -123,6 +134,13 @@ public class OrderController {
 				
 				request.getSession().setAttribute("cart", new HashMap<>());
 				connection.commit();
+				
+				sb.append("will be delivered at: ").append(user.getAddress());
+				
+				
+				new Thread(() -> {
+					MailSender.INSTANCE.sendEmail(mailSender, user.getEmail(), sb.toString());
+				}).start();
 			}
 			catch (SQLException e) {
 				connection.rollback();

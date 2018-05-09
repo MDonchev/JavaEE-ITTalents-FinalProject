@@ -5,6 +5,7 @@
 <%@page import="com.nargilemag.model.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<% response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");  %>
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
@@ -56,6 +57,9 @@
 												<li><a href="logout">Logout</a></li>
 												<li><a href="favourites">Favourites</a></li>
 												<li><a href="order">Cart</a></li>
+												<c:if test="${user.admin }">
+													<li><a href="addproduct">Add Product</a></li>
+												</c:if>
 												<li><c:out value="${user.balance } лв."></c:out></li>
 											</ul>
 										</c:when>
@@ -224,7 +228,7 @@
 											<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-<c:out value="${pr.getDiscountPercent()}"></c:out>%</span></div>
 											<div class="product_info">
 												<h6 class="product_name"><a href="#"><c:out value="${pr.name }"></c:out></a></h6>
-												<div class="product_price">$<c:out value="${pr.getDiscountPrice()}"></c:out><span>$<c:out value="${pr.price}"></c:out></span></div>
+												<div class="product_price"><c:out value="${pr.getDiscountPrice()} лв."></c:out><span><c:out value="${pr.price} лв."></c:out></span></div>
 											</div>
 										</div>
 									</div>

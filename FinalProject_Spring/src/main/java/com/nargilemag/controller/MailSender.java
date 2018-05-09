@@ -31,5 +31,20 @@ public enum MailSender {
 				e.printStackTrace();
 			}
 		}
-}
+	}
+	
+	public void sendEmail(JavaMailSenderImpl mailsender, String email, String mess) {
+			MimeMessage mimeMessage = mailsender.createMimeMessage();
+		
+			try {
+				MimeMessageHelper mailMsg = new MimeMessageHelper(mimeMessage, true);
+				mailMsg.setFrom("ittalents.nargilemag@gmail.com");
+				mailMsg.setTo(email);
+				mailMsg.setSubject("Information mail");
+				mailMsg.setText(mess, true);
+				mailsender.send(mimeMessage);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+	}
 }

@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.nargilemag.model.Category;
 import com.nargilemag.model.Gender;
 import com.nargilemag.model.Product;
 import com.nargilemag.model.User;
+import com.nargilemag.model.dao.CategoryDao;
 import com.nargilemag.model.dao.ProductDao;
 import com.nargilemag.model.dao.UserDao;
 import com.nargilemag.util.exceptions.UserDataException;
@@ -30,13 +32,13 @@ public class UserController {
 
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String showLoginPage(){
+	public String showLoginPage(Model model){
 		return "login";
 	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String userLogin(@RequestParam("username") String username, @RequestParam("password") String password,
-			HttpServletRequest request, HttpSession session) throws SQLException {
+			HttpServletRequest request, HttpSession session) {
 		try {
 			
 			User u = UserDao.INSTANCE.getUserFromLogin(username, password);
@@ -52,25 +54,27 @@ public class UserController {
 		}
 		catch (UserDataException | SQLException e) {
 			request.setAttribute("exception", e);
+			e.printStackTrace();
 			return "error";
 		}
 	}
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	@RequestMapping(value = {"/logout","../logout"}, method = RequestMethod.GET)
 	public String userLogout(HttpSession session){
-		session.invalidate();
+		if (session.getAttribute("user") != null) {
+			session.invalidate();
+		}
 		return "redirect:/";
 	}
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
-	public String showRegisterPage(HttpServletRequest request) {
+	public String showRegisterPage(Model model) {
 		try {
-			//get genders from db
 			List<Gender> genders = UserDao.INSTANCE.getAllGenders();
-			//add them to request
-			request.setAttribute("genders", genders);
-			//forward this request to register.jsp
+			
+			model.addAttribute("genders", genders);
 			return "register";
 		} catch (SQLException e) {
-			
+			model.addAttribute("exception", e);
+			e.printStackTrace();
 			return "error";
 		}
 		
@@ -98,7 +102,7 @@ public class UserController {
 			session.setAttribute("user", u);
 			session.setAttribute("cart", new HashMap<Product,Integer>());
 			
-			//forward to login OR main
+			//forward to main
 			return "redirect:/";
 		}
 		catch (UserDataException | SQLException e) {
@@ -108,23 +112,25 @@ public class UserController {
 	}
 	
 	@RequestMapping(value= "/addToCart", method = RequestMethod.GET)
-	public String showAddToCart(Model m, HttpServletRequest request) {
-		
-		try {
-			int productId = Integer.parseInt(request.getParameter("ordered_product"));
-			
-			Product p = null;
-			
-			p = ProductDao.INSTANCE.getProductBtID(productId);
-			
-			request.setAttribute("product", p);
-			
-			return "addtocart";
-		} catch (SQLException e) {
-			request.setAttribute("exception", e);
-			return "error";
+	public String showAddToCart(Model m, HttpServletRequest request, HttpSession session) {
+		if (session.getAttribute("user") != null) {
+			try {
+				int productId = Integer.parseInt(request.getParameter("ordered_product"));
+				
+				Product p = null;
+				
+				p = ProductDao.INSTANCE.getProductBtID(productId);
+				
+				request.setAttribute("product", p);
+				
+				return "addtocart";
+			} catch (SQLException e) {
+				request.setAttribute("exception", e);
+				return "error";
+			}
+		} else {
+			return "redirect:/";
 		}
-		
 	}
 	
 	@RequestMapping(value= "/addToCart", method = RequestMethod.POST)

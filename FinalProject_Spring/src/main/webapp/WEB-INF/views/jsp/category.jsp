@@ -5,6 +5,7 @@
 <%@page import="com.nargilemag.model.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<% response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");  %>
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
@@ -48,15 +49,18 @@
 								<!-- My Account -->
 								<li class="account">
 									<c:choose>
-										<c:when test="${not empty loggedUser}">
+										<c:when test="${not empty user}">
 											<a href="#">
-												<c:out value="${loggedUser.username }"></c:out>
+												<c:out value="${user.username }"></c:out>
 											</a>
 											<ul class="account_selection">
 												<li><a href="../logout">Logout</a></li>
 												<li><a href="../favourites">Favourites</a></li>
 												<li><a href="../order">Cart</a></li>
-												<li><c:out value="${loggedUser.balance } лв."></c:out></li>
+												<c:if test="${user.admin }">
+													<li><a href="../addproduct">Add Product</a></li>
+												</c:if>
+												<li><c:out value="${user.balance } лв."></c:out></li>
 											</ul>
 										</c:when>
 										<c:otherwise>
@@ -124,7 +128,7 @@
 			<c:if test="${currentcat.isMain() }">
 				<c:forEach items="${subcategories }" var="cat">
 					<div class="col-md-4">
-						<div class="banner_item align-items-center" style="background-image:url('../download/nargile2.jpeg')">
+						<div class="banner_item align-items-center" style="background-image:url('../download/product${cat.id}.jpg')">
 							<div class="banner_category">
 								<a href="${cat.id}"><c:out value="${cat.name }"></c:out></a>
 							</div>
@@ -173,7 +177,7 @@
 									</c:choose>
 								</div>
 							</div>
-							<c:if test="${not empty loggedUser}">
+							<c:if test="${not empty user}">
 								<f:form action="../addToCart" class="cartbutton" method="GET">
 									<div class="red_button add_to_cart_button">
 										<input type="hidden" name="ordered_product" value="${p.getId() }">

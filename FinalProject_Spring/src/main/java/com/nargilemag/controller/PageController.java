@@ -33,7 +33,7 @@ public class PageController {
 			
 			m.addAttribute("products", products);
 			m.addAttribute("promotions", promotions);
-			m.addAttribute("categories", mainCategories);
+			session.setAttribute("categories", mainCategories);
 			return "index";
 		}
 		catch (SQLException e) {
@@ -48,7 +48,6 @@ public class PageController {
 		try{
 			List<Product> products = null;
 			List<Category> subcategories = new ArrayList<>();
-			List<Category> mainCategories = CategoryDao.INSTANCE.getCategories();
 			Category cat = CategoryDao.INSTANCE.getCategoryById(categoryID);
 			
 			if(cat.getParent() == 0) {
@@ -59,7 +58,6 @@ public class PageController {
 			}
 	
 			m.addAttribute("products", products);
-			m.addAttribute("categories", mainCategories);
 			m.addAttribute("subcategories", subcategories);
 			m.addAttribute("currentcat", cat);
 			return "category";
@@ -75,10 +73,8 @@ public class PageController {
 	public String showSortedProducts(Model model, HttpServletRequest request, HttpSession session) {
 		
 		List<Product> products = new ArrayList<>();
-		List<Product> favourites = new ArrayList<>();
 		try {
 			products = ProductDao.INSTANCE.getAllProducts();
-			favourites = ProductDao.INSTANCE.getUserFavourites((User)session.getAttribute("user"));
 		} catch (SQLException e) {
 			request.setAttribute("exception", e);
 			e.printStackTrace();
@@ -88,31 +84,29 @@ public class PageController {
 		TreeSet<Product> sortedProducts = new TreeSet<>((p1, p2) -> Double.compare(p1.getPrice() , p2.getPrice()));
 		sortedProducts.addAll(products);
 		
-		model.addAttribute("loggedUser", session.getAttribute("user"));
-		model.addAttribute("favourites", favourites);
-		
-		
 		model.addAttribute("products", sortedProducts);
 		
 		return "index";
 	}
 	@RequestMapping(value="/favourites", method=RequestMethod.GET)
 	public String showFavourites(Model model, HttpServletRequest request, HttpSession session) {
-		try {
-			User u = (User)session.getAttribute("user");
-			List<Product> favourites = new ArrayList<>();
-			favourites = ProductDao.INSTANCE.getUserFavourites(u);
-			List<Category> mainCategories = CategoryDao.INSTANCE.getCategories();
-			model.addAttribute("loggedUser", u);
-			model.addAttribute("favourites", favourites);
-			model.addAttribute("categories", mainCategories);
-			
-			return "favourites";
-		} catch (SQLException e) {
-			request.setAttribute("exception", e);
-			e.printStackTrace();
-			return "error";
-		}
 		
+		if (session.getAttribute("user") != null) {
+			try {
+				User u = (User)session.getAttribute("user");
+				List<Product> favourites = new ArrayList<>();
+				favourites = ProductDao.INSTANCE.getUserFavourites(u);
+
+				model.addAttribute("favourites", favourites);
+				
+				return "favourites";
+			} catch (SQLException e) {
+				request.setAttribute("exception", e);
+				e.printStackTrace();
+				return "error";
+			}
+		} else {
+			return "redirect:/";
+		}
 	}
 }

@@ -1,7 +1,5 @@
 package com.nargilemag.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.mail.MessagingException;
+import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -49,32 +48,35 @@ public class ProductController {
 	@Autowired
 	private JavaMailSenderImpl mailSender;
 	
-	private static final String PRODUCT_IMG_FILE_PATH = "C:\\Users\\Badbit\\Documents\\FinalProjectImages\\"; 
+	private static final String PRODUCT_IMG_FILE_PATH = "/home/mario/Документи/uploads-FP-ITT/"; 
 	
 	
 	@RequestMapping(value = "/addproduct", method = RequestMethod.GET)
-	public String addProductPage(HttpServletRequest request) {
+	public String addProductPage(HttpServletRequest request, HttpSession session) {
 		
-		// TODO if validate
-		try {
-			//get needed information from db
-			List<Category> categories = CategoryDao.INSTANCE.getCategories();
-			List<Category> subcategories = CategoryDao.INSTANCE.getSubCategories();
-			List<Characteristic> characteristics = CharacteristicDao.INSTANCE.getAllCharacteristics();
-			//add them to request
-			request.setAttribute("categories", categories);
-			request.setAttribute("subcategories", subcategories);
-			request.setAttribute("character", characteristics);
-			//forward this request to addproduct.jsp
-			return "addproduct";
-		} catch (SQLException e) {
-			e.printStackTrace();
-			request.setAttribute("exception", e);
-			return "error";
+		if (session.getAttribute("user") != null) {
+			try {
+				//get needed information from db
+				List<Category> categories = CategoryDao.INSTANCE.getCategories();
+				List<Category> subcategories = CategoryDao.INSTANCE.getSubCategories();
+				List<Characteristic> characteristics = CharacteristicDao.INSTANCE.getAllCharacteristics();
+				//add them to request
+				request.setAttribute("categories", categories);
+				request.setAttribute("subcategories", subcategories);
+				request.setAttribute("character", characteristics);
+				//forward this request to addproduct.jsp
+				return "addproduct";
+			} catch (SQLException e) {
+				e.printStackTrace();
+				request.setAttribute("exception", e);
+				return "error";
+			}
+		} else {
+			return "redirect:/";
 		}
 	}
 	@RequestMapping(value = "/addproduct", method = RequestMethod.POST)
-	public String addProduct(HttpServletRequest request, @RequestParam("name") String name,
+	public String addProduct(HttpSession session, HttpServletRequest request, @RequestParam("name") String name,
 							@RequestParam("desc") String desc,
 							@RequestParam("price") String price,
 							@RequestParam("ammount") String ammount,
@@ -82,35 +84,39 @@ public class ProductController {
 							@RequestParam("characteristics") String character,
 							@RequestParam("ch_ammo") String ch_value,
 							@RequestParam("fail") MultipartFile uploadedFile) {
-		try {
-			String extension = FilenameUtils.getExtension(uploadedFile.getOriginalFilename());
-			ProductCredentialValidation.checkCredentials(name,desc,price,ammount,category,character,ch_value,extension);
-			
-			Double price1 = Double.parseDouble(price);
-			Integer ammount1 = Integer.parseInt(ammount);
-			Integer category1 = Integer.parseInt(category);
-			Integer ch_value1 = Integer.parseInt(ch_value);
-			
-			List<Characteristic> characteristics = new ArrayList<>();
-			Integer character1 = Integer.parseInt(character);
-			String ch_name = CharacteristicDao.INSTANCE.getCharacteristicNameByID(character1);
-			Integer ch_category = CharacteristicDao.INSTANCE.getCharacteristicCategory(character1);
-			characteristics.add(new Characteristic(character1,ch_name, ch_value1,ch_category));
-			
-			String fileName = uploadedFile.getOriginalFilename();
-			File serverFile = new File(PRODUCT_IMG_FILE_PATH + fileName);
-			Files.copy(uploadedFile.getInputStream(), serverFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-			
-			Product p = new Product(name, desc, price1, ammount1, category1, characteristics, fileName, 0); //initial discount percent is always 0
-			
-			ProductDao.INSTANCE.saveProduct(p);
+		if (session.getAttribute("user") != null) {
+			try {
+				String extension = FilenameUtils.getExtension(uploadedFile.getOriginalFilename());
+				ProductCredentialValidation.checkCredentials(name,desc,price,ammount,category,character,ch_value,extension);
 				
+				Double price1 = Double.parseDouble(price);
+				Integer ammount1 = Integer.parseInt(ammount);
+				Integer category1 = Integer.parseInt(category);
+				Integer ch_value1 = Integer.parseInt(ch_value);
+				
+				List<Characteristic> characteristics = new ArrayList<>();
+				Integer character1 = Integer.parseInt(character);
+				String ch_name = CharacteristicDao.INSTANCE.getCharacteristicNameByID(character1);
+				Integer ch_category = CharacteristicDao.INSTANCE.getCharacteristicCategory(character1);
+				characteristics.add(new Characteristic(character1,ch_name, ch_value1,ch_category));
+				
+				String fileName = uploadedFile.getOriginalFilename();
+				File serverFile = new File(PRODUCT_IMG_FILE_PATH + fileName);
+				Files.copy(uploadedFile.getInputStream(), serverFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+				
+				Product p = new Product(name, desc, price1, ammount1, category1, characteristics, fileName, 0); //initial discount percent is always 0
+				
+				ProductDao.INSTANCE.saveProduct(p);
+					
+				return "redirect:/";
+			} catch (SQLException | IOException | ProductDataException e) {
+				request.setAttribute("exception", e);
+				e.printStackTrace();
+				return "error";
+			}
+		} else {
 			return "redirect:/";
-		} catch (SQLException | IOException | ProductDataException e) {
-			request.setAttribute("exception", e);
-			e.printStackTrace();
-			return "error";
 		}
 		
 	}
@@ -124,21 +130,21 @@ public class ProductController {
 		}
 	}
 	@RequestMapping(value = "/updateProduct", method = RequestMethod.GET)
-	public String updateProductPage(HttpServletRequest request) {
-		// TODO if alabala
-		int productId = Integer.parseInt(request.getParameter("changed_product"));
-		
-		Product p = null;
-		try {
-			p = ProductDao.INSTANCE.getProductBtID(productId);
-		} catch (SQLException e) {
-			request.setAttribute("exception", e);
-			return "error";
+	public String updateProductPage(HttpServletRequest request, HttpSession session) {
+		if (session.getAttribute("user") != null) {
+			try {
+				int productId = Integer.parseInt(request.getParameter("changed_product"));
+				Product	p = ProductDao.INSTANCE.getProductBtID(productId);
+				
+				request.setAttribute("product", p);
+				return "updateProductAmount";
+			} catch (SQLException e) {
+				request.setAttribute("exception", e);
+				return "error";
+			}
+		} else {
+			return "redirect:/";
 		}
-		
-		request.setAttribute("product", p);
-		
-		return "updateProductAmount";
 	}
 	@RequestMapping(value = "/updateProductAmount", method = RequestMethod.POST)
 	public String updateProduct(@ModelAttribute Product product, HttpServletRequest request) {
@@ -188,7 +194,6 @@ public class ProductController {
 	public String viewProduct(Model model, HttpServletRequest request,@PathVariable("productID") Integer productID, HttpSession session) {
 		User u = (User)session.getAttribute("user");
 		model.addAttribute("loggedUser", u);
-		
 		Product product = null;
 		String category = null;
 		try {

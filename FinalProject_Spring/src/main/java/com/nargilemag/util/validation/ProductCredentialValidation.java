@@ -27,7 +27,7 @@ public final class ProductCredentialValidation {
 			String character, String ch_value, String extension) throws ProductDataException{
 		stringValidation(name);
 		stringValidation(desc);
-		numberValidation(price);
+		///////////////////////// ??????????????????????? price
 		numberValidation(ammount);
 		numberValidation(ch_value);
 		
